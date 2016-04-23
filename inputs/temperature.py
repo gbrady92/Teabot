@@ -48,8 +48,10 @@ class Temperature(object):
         number_falling = 0
         for x, y in self.pairwise(set_of_readings):
             if y >= x:
+                print "y is greater than x"
                 number_rising += 1
-            number_falling += 1
+            else:
+                number_falling += 1
         if number_rising > number_falling:
             return True
         return False
