@@ -45,5 +45,7 @@ def get_teapot_status(
         else:
             return get_descriptor("COLD_POT_WITH_TEA", num_of_cups)
     if weight < empty_teapot_weight:
+        return get_descriptor("NO TEAPOT", num_of_cups)
+    if num_of_cups == 0:
         return get_descriptor("EMPTY_TEAPOT", num_of_cups)
     return get_descriptor("ERROR_STATE")
