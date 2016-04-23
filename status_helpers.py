@@ -10,18 +10,17 @@ def get_descriptor(tea_status):
 
 
 def get_teapot_status(
-         weight, temperature, new_teapot_weight, new_teapot_temperature,
+         weight, temperature, new_teapot_weight,
         empty_teapot_weight, cold_teapot_temperature, temperature_rising):
 
     logging.debug("\nTemperature %s\
                    \nWeight %s\
                    \nNew Teapot Weight %s\
-                   \nNew Teapot Temp %s\
                    \nEmpty Teapot Weight %s\
                    \nCold Teapot Temp %s\
                    \nTemperature Rising %s"
                    % (temperature, weight, new_teapot_weight,
-                   new_teapot_temperature, empty_teapot_weight,
+                   empty_teapot_weight,
                    cold_teapot_temperature, temperature_rising)
                  )
 
