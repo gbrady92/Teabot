@@ -1,6 +1,7 @@
 import os
 import glob
 import time
+from itertools import tee
 
 
 class Temperature(object):
@@ -40,3 +41,22 @@ class Temperature(object):
             temp_string = lines[1][equals_pos+2:]
             temp_c = float(temp_string) / 1000.0
             return temp_c
+
+    def is_rising(self):
+        set_of_readings = [self.get_reading() for _ in range(0, 10)]
+        number_rising = 0
+        number_falling = 0
+        for x, y in self.pairwise(set_of_readings):
+            if y >= x:
+                number_rising += 1
+            number_falling += 1
+        if number_rising > number_falling:
+            return True
+        return False
+
+    def pairwise(self, iterable):
+        "s -> (s0,s1), (s1,s2), (s2, s3), ..."
+        a, b = tee(iterable)
+        next(b, None)
+        return zip(a, b)
+

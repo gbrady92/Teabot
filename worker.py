@@ -11,5 +11,5 @@ while True:
     status = get_teapot_status(
         weight=weight, temperature=temperature, new_teapot_temperature=55,
         new_teapot_weight=3000, empty_teapot_weight=0,
-        cold_teapot_temperature=20)
+        cold_teapot_temperature=20, temperature_rising=temperature_sensor.is_rising())
     print status
