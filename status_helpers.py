@@ -13,6 +13,13 @@ def get_is_teapot_full(new_teapot_weight, teapot_weight, weight_of_tea_in_cup):
     lower_bound = new_teapot_weight - weight_of_tea_in_cup
     return lower_bound <= teapot_weight
 
+def get_remaining_cups(teapot_weight, empty_teapot_weight, weight_of_tea_in_cup):
+  remaining_cups = (teapot_weight - empty_teapot_weight) / weight_of_tea_in_cup
+  if remaining_cups >= 0.70:
+    return 1
+  else:
+    return int(remaining_cups)
+
 def get_teapot_status(
          current_weight, temperature, new_teapot_weight,
         empty_teapot_weight, cold_teapot_temperature, temperature_rising, weight_of_tea_in_cup):

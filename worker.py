@@ -9,10 +9,6 @@ temperature_sensor = Temperature()
 weight_of_tea_in_cup = 250
 empty_teapot_weight = 1472
 
-def get_cups_remaining(teapot_weight):
-	return int((teapot_weight - empty_teapot_weight) / tea_in_cup_weight)
-
-
 while True:
     weight = weight_sensor.get_reading()
     temperature = temperature_sensor.get_reading()
