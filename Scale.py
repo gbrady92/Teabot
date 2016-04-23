@@ -20,7 +20,8 @@ class Scale(object):
         return max(lst, key=lst.count)
 
     def get_scale_reading(self):
-        """Multiple readings from the scale are used as old values may be returned from scale.
+        """Multiple readings from the scale are used as old values may be
+         returned from scale.
            Scale readings are converted into grams and appended to read list.
            The most common value in the list is returned.
         """
@@ -39,4 +40,5 @@ class Scale(object):
             data = self.most_common(read_list)
             return data
         except Exception:
+                print "SOMETHING WENT HORRIBLY WRONG"
                 pass
