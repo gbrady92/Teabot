@@ -1,6 +1,8 @@
 from collections import namedtuple
 from datetime import datetime
 import logging
+
+from constants import TeapotStatuses
 logging.basicConfig(level=logging.DEBUG)
 
 
@@ -38,14 +40,14 @@ def get_teapot_status(
 
     if temperature_rising and get_is_teapot_full(
             new_teapot_weight, weight, 250):
-        return get_descriptor("NEW_TEAPOT", num_of_cups)
+        return get_descriptor(TeapotStatuses.NEW_TEAPOT, num_of_cups)
     if weight > empty_teapot_weight and weight < new_teapot_weight:
         if temperature > cold_teapot_temperature:
-            return get_descriptor("GOOD_POT", num_of_cups)
+            return get_descriptor(TeapotStatuses.GOOD_TEAPOT, num_of_cups)
         else:
-            return get_descriptor("COLD_POT_WITH_TEA", num_of_cups)
+            return get_descriptor(TeapotStatuses.COLD_TEAPOT, num_of_cups)
     if weight < empty_teapot_weight:
-        return get_descriptor("NO TEAPOT", num_of_cups)
+        return get_descriptor(TeapotStatuses.NO_TEAPOT, num_of_cups)
     if num_of_cups == 0:
-        return get_descriptor("EMPTY_TEAPOT", num_of_cups)
-    return get_descriptor("ERROR_STATE")
+        return get_descriptor(TeapotStatuses.EMPTY_TEAPOT, num_of_cups)
+    return get_descriptor(TeapotStatuses.ERROR_STATE)
