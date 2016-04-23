@@ -1,5 +1,7 @@
 from collections import namedtuple
 from datetime import datetime
+import logging
+logging.basicConfig(level=logging.DEBUG)
 
 
 def get_descriptor(tea_status):
@@ -8,8 +10,19 @@ def get_descriptor(tea_status):
 
 
 def get_teapot_status(
-        temperature, weight, new_teapot_temperature, new_teapot_weight,
+         weight, temperature, new_teapot_weight, new_teapot_temperature,
         empty_teapot_weight, cold_teapot_temperature):
+
+    logging.debug("\nTemperature %s\
+                   \nWeight %s\
+                   \nNew Teapot Weight %s\
+                   \nNew Teapot Temp %s\
+                   \nEmpty Teapot Weight %s\
+                   \nCold Teapot Temp %s"
+                   % (temperature, weight, new_teapot_weight,
+                   new_teapot_temperature, empty_teapot_weight,
+                   cold_teapot_temperature)
+                 )
 
     if temperature > new_teapot_temperature and weight > new_teapot_weight:
         return get_descriptor("NEW_TEAPOT")

@@ -3,7 +3,7 @@ import glob
 import time
 
 
-class Tempature(object):
+class Temperature(object):
 
     def __init__(self):
         # Initialize the GPIO Pins
@@ -23,7 +23,7 @@ class Tempature(object):
         return lines
 
     # Convert the value of the sensor into a temperature
-    def read_temp(self):
+    def get_reading(self):
         lines = self.read_temp_raw()  # Read the temperature 'device file'
 
         # While the first line does not contain 'YES', wait for 0.2s

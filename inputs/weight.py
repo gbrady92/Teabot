@@ -5,7 +5,7 @@ VENDOR_ID = 0x0922
 PRODUCT_ID = 0x8006
 
 
-class Scale(object):
+class Weight(object):
 
     def __init__(self):
         self.device = usb.core.find(idVendor=VENDOR_ID, idProduct=PRODUCT_ID)
@@ -19,7 +19,7 @@ class Scale(object):
         # Returns the most common value in the list
         return max(lst, key=lst.count)
 
-    def get_scale_reading(self):
+    def get_reading(self):
         """Multiple readings from the scale are used as old values may be
          returned from scale.
            Scale readings are converted into grams and appended to read list.

@@ -1,12 +1,15 @@
-from Scale import Scale
+from inputs.weight import Weight
+from inputs.temperature import Temperature
 from status_helpers import get_teapot_status
 
-scale = Scale()
+weight_sensor = Weight()
+temperature_sensor = Temperature()
 
 while True:
-    weight = scale.get_scale_reading()
-    print weight
+    weight = weight_sensor.get_reading()
+    temperature = temperature_sensor.get_reading()
     status = get_teapot_status(
-        temperature=50, weight=weight, new_teapot_temperature=50,
-        new_teapot_weight=60, empty_teapot_weight=0, cold_teapot_temperature=20)
+        weight=weight, temperature=temperature, new_teapot_temperature=55,
+        new_teapot_weight=3000, empty_teapot_weight=0,
+        cold_teapot_temperature=20)
     print status
