@@ -11,7 +11,7 @@ stored_data_dict = dict()
 
 
 def get_average_reading(key):
-    stored_data_dict[key] = weight_sensor.get_scale_reading()
+    stored_data_dict[key] = weight_sensor.get_reading()
     print stored_data_dict[key]
 
 print (raw_input('Place empty teapot on scale and press enter.'))
