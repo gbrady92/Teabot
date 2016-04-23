@@ -5,11 +5,20 @@ from status_helpers import get_teapot_status
 weight_sensor = Weight()
 temperature_sensor = Temperature()
 
+#TODO Get readings from db.
+tea_in_cup_weight = 250
+empty_teapot_weight = 1472
+
+def get_cups_remaining(teapot_weight):
+	return int((teapot_weight - empty_teapot_weight) / cup_of_tea_weight)
+
+
 while True:
     weight = weight_sensor.get_reading()
     temperature = temperature_sensor.get_reading()
     status = get_teapot_status(
-        weight=weight, temperature=temperature, new_teapot_temperature=55,
-        new_teapot_weight=3000, empty_teapot_weight=0,
-        cold_teapot_temperature=20, temperature_rising=temperature_sensor.is_rising())
+        weight=weight, temperature=temperature,
+        new_teapot_weight=3042, empty_teapot_weight=1472,
+        cold_teapot_temperature=40, temperature_rising=temperature_sensor.is_rising())
     print status
+    print get_cups_remaining(weight)
