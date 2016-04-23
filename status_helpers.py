@@ -10,7 +10,8 @@ def get_descriptor(tea_status):
 
 
 def get_is_teapot_full(new_teapot_weight, teapot_weight, weight_of_tea_in_cup):
-    return (new_teapot_weight - weight_of_tea_in_cup) <= teapot_weight <= (new_teapot_weight + weight_of_tea_in_cup)
+    lower_bound = new_teapot_weight - weight_of_tea_in_cup
+    return lower_bound <= teapot_weight
 
 
 def get_teapot_status(
@@ -28,7 +29,7 @@ def get_teapot_status(
                    cold_teapot_temperature, temperature_rising)
                  )
 
-    if temperature_rising and weight > get_is_teapot_full(
+    if temperature_rising and get_is_teapot_full(
             new_teapot_weight, weight, 250):
         return get_descriptor("NEW_TEAPOT")
     if weight > empty_teapot_weight and weight < new_teapot_weight:
