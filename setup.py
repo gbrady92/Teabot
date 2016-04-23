@@ -1,18 +1,17 @@
 from __future__ import division
-from read_scale import Scale
-import json
-from time import sleep
+from inputs.weight import Weight
+from inputs.temperature import Temperature
 
 
-scale = Scale()
+weight_sensor = Weight()
+tempature_sensor = Temperature()
 data_list = []
 global stored_data_dict
 stored_data_dict = dict()
 
 
 def get_average_reading(key):
-    scale = Scale()
-    stored_data_dict[key] = scale.get_scale_reading()
+    stored_data_dict[key] = weight_sensor.get_scale_reading()
     print stored_data_dict[key]
 
 print (raw_input('Place empty teapot on scale and press enter.'))
