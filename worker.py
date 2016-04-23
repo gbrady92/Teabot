@@ -6,7 +6,7 @@ weight_sensor = Weight()
 temperature_sensor = Temperature()
 
 #TODO Get readings from db.
-tea_in_cup_weight = 250
+weight_of_tea_in_cup = 250
 empty_teapot_weight = 1472
 
 def get_cups_remaining(teapot_weight):
@@ -19,6 +19,4 @@ while True:
     status = get_teapot_status(
         weight=weight, temperature=temperature,
         new_teapot_weight=3042, empty_teapot_weight=1472,
-        cold_teapot_temperature=40, temperature_rising=temperature_sensor.is_rising())
-    print status
-    print get_cups_remaining(weight)
+        cold_teapot_temperature=40, temperature_rising=temperature_sensor.is_rising(), weight_of_tea_in_cup=weight_of_tea_in_cup)
