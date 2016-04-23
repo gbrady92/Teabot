@@ -10,7 +10,7 @@ tea_in_cup_weight = 250
 empty_teapot_weight = 1472
 
 def get_cups_remaining(teapot_weight):
-	return int((teapot_weight - empty_teapot_weight) / cup_of_tea_weight)
+	return int((teapot_weight - empty_teapot_weight) / tea_in_cup_weight)
 
 
 while True:
