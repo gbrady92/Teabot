@@ -32,6 +32,10 @@ def get_remaining_cups(
 
 def get_teapot_brewed_status(current_new_teapot_time):
     global new_teapot_time
+    global teapot_status
+
+    if teapot_status == TeapotStatuses.OLD_BREWED_TEAPOT:
+        return TeapotStatuses.OLD_BREWED_TEAPOT
     if new_teapot_time is None:
         new_teapot_time = current_new_teapot_time
         return TeapotStatuses.NEW_TEAPOT
