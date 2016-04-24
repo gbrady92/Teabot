@@ -12,7 +12,7 @@ teapot_status = None
 def get_descriptor(tea_status, num_of_cups):
     status = namedtuple("status", ["tea_state", "timestamp", "num_of_cups"])
     return status(
-        tea_state=tea_status, timestamp=datetime.now(), num_cups=num_of_cups)
+        tea_state=tea_status, timestamp=datetime.now(), num_of_cups=num_of_cups)
 
 
 def get_is_teapot_full(
