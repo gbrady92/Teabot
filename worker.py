@@ -10,9 +10,9 @@ weight_of_tea_in_cup = 250
 empty_teapot_weight = 1472
 
 while True:
-    weight = weight_sensor.get_reading()
+    current_weight = weight_sensor.get_reading()
     temperature = temperature_sensor.get_reading()
     status = get_teapot_status(
-        weight=weight, temperature=temperature,
+        current_weight=current_weight, temperature=temperature,
         new_teapot_weight=3042, empty_teapot_weight=1472,
         cold_teapot_temperature=40, temperature_rising=temperature_sensor.is_rising(), weight_of_tea_in_cup=weight_of_tea_in_cup)
