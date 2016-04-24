@@ -1,9 +1,12 @@
 from collections import namedtuple
-from datetime import datetime
+from datetime import datetime, timedelta
 import logging
 
 from constants import TeapotStatuses
 logging.basicConfig(level=logging.DEBUG)
+
+global new_teapot_time
+global teapot_status
 
 
 def get_descriptor(tea_status, num_of_cups):
@@ -26,6 +29,15 @@ def get_remaining_cups(
         return 1
     else:
         return int(remaining_cups)
+
+def get_teapot_brewed_status(current_new_teapot_time):
+    if new_teapot_time is None:
+        new_teapot_time = new_teapot_time
+        return TeapotStatuses.NEW_TEAPOT
+    elif new_teapot_time + timedelta(minutes=5) <= datetime.now():
+            return TeapotStatuses.NEW_TEAPOT
+    new_teapot_time = None
+    return TeapotStatuses.BREWED_TEAPOT
 
 
 def get_teapot_status(
@@ -50,15 +62,28 @@ def get_teapot_status(
             new_teapot_weight - empty_teapot_weight,
             current_weight - empty_teapot_weight,
             weight_of_tea_in_cup):
-        return get_descriptor(TeapotStatuses.NEW_TEAPOT, num_of_cups)
+        # Only evaluated if NEW_TEAPOT criteria is met.
+        if teapot_status == TeapotStatuses.BREWED_TEAPOT:
+            teapot_status = TeapotStatuses.OLD_BREWED_TEAPOT
+        else:
+            teapot_status = get_teapot_brewed_status(datetime.now())
+
+        return get_descriptor(teapot_status, num_of_cups)
+
     if current_weight > empty_teapot_weight and \
             current_weight < new_teapot_weight:
         if temperature > cold_teapot_temperature:
-            return get_descriptor(TeapotStatuses.GOOD_TEAPOT, num_of_cups)
+            teapot_status = TeapotStatuses.GOOD_TEAPOT
+            return get_descriptor(teapot_status, num_of_cups)
         else:
             return get_descriptor(TeapotStatuses.COLD_TEAPOT, num_of_cups)
+
     if current_weight < empty_teapot_weight:
-        return get_descriptor(TeapotStatuses.NO_TEAPOT, num_of_cups)
+        teapot_status = TeapotStatuses.NO_TEAPOT
+        return get_descriptor(teapot_status, num_of_cups)
+
     if num_of_cups == 0:
-        return get_descriptor(TeapotStatuses.EMPTY_TEAPOT, num_of_cups)
+        teapot_status = TeapotStatuses.EMPTY_TEAPOT
+        return get_descriptor(teapot_status, num_of_cups)
+
     return get_descriptor(TeapotStatuses.ERROR_STATE)
