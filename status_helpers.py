@@ -38,7 +38,7 @@ def get_teapot_brewed_status(current_new_teapot_time):
     elif new_teapot_time + timedelta(minutes=5) <= datetime.now():
             return TeapotStatuses.NEW_TEAPOT
     new_teapot_time = None
-    return TeapotStatuses.BREWED_TEAPOT
+    return TeapotStatuses.NEW_BREWED_TEAPOT
 
 
 def get_teapot_status(
@@ -65,7 +65,7 @@ def get_teapot_status(
             current_weight - empty_teapot_weight,
             weight_of_tea_in_cup):
         # Only evaluated if NEW_TEAPOT criteria is met.
-        if teapot_status == TeapotStatuses.BREWED_TEAPOT:
+        if teapot_status == TeapotStatuses.NEW_BREWED_TEAPOT:
             teapot_status = TeapotStatuses.OLD_BREWED_TEAPOT
         else:
             teapot_status = get_teapot_brewed_status(datetime.now())
