@@ -5,8 +5,8 @@ import logging
 from constants import TeapotStatuses
 logging.basicConfig(level=logging.DEBUG)
 
-global new_teapot_time
-global teapot_status
+new_teapot_time = None
+teapot_status = None
 
 
 def get_descriptor(tea_status, num_of_cups):
@@ -31,6 +31,7 @@ def get_remaining_cups(
         return int(remaining_cups)
 
 def get_teapot_brewed_status(current_new_teapot_time):
+    global new_teapot_time
     if new_teapot_time is None:
         new_teapot_time = new_teapot_time
         return TeapotStatuses.NEW_TEAPOT
@@ -44,6 +45,7 @@ def get_teapot_status(
         current_weight, temperature, new_teapot_weight,
         empty_teapot_weight, cold_teapot_temperature, temperature_rising,
         weight_of_tea_in_cup):
+    global teapot_status
 
     logging.debug("\nTemperature %s\
                    \nWeight %s\
