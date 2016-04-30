@@ -5,7 +5,7 @@ from status_helpers import get_teapot_status
 weight_sensor = Weight()
 temperature_sensor = Temperature()
 
-#TODO Get readings from db.
+# TODO Get readings from db.
 weight_of_tea_in_cup = 250
 empty_teapot_weight = 1472
 
