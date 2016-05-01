@@ -29,6 +29,8 @@ class Constants(object):
         self.COLD_TEAPOT_TEMPERATURE = None
         self.WEIGHT_OF_TEA_IN_CUP = None
         self.ZERO_WEIGHT = None
+        self.BREW_DELAY_MINUTES = None
+        self.ENDPOINT_BASE_URL = None
 
     def get_full_teapot_weight(self):
         if not self.FULL_TEAPOT_WEIGHT:
@@ -59,6 +61,18 @@ class Constants(object):
             # TODO Replace with actual database lookup
             self.ZERO_WEIGHT = 0
         return self.ZERO_WEIGHT
+
+    def get_brew_delay_minutes(self):
+        if not self.BREW_DELAY_MINUTES:
+            # TODO Replace with actual database lookup
+            self.BREW_DELAY_MINUTES = 5
+        return self.BREW_DELAY_MINUTES
+
+    def get_endpoint_base_url(self):
+        if not self.ENDPOINT_BASE_URL:
+            # TODO Replace with actual database lookup
+            self.ENDPOINT_BASE_URL = ""
+        return self.ENDPOINT_BASE_URL
 
     def get_weight_of_tea_in_full_teapot(self):
         return self.get_full_teapot_weight() - self.get_empty_teapot_weight()

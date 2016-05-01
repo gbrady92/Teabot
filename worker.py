@@ -1,20 +1,38 @@
 from inputs.weight import Weight
 from inputs.temperature import Temperature
-from status_helpers import get_teapot_status
+from status_helpers import TeapotStatus
+from server_communicator import ServerCommunicator
 
 weight_sensor = Weight()
 temperature_sensor = Temperature()
+server_link = ServerCommunicator()
+teapot_status = TeapotStatus()
+last_status = None
+last_number_of_cups = None
 
-# TODO Get readings from db.
-weight_of_tea_in_cup = 250
-empty_teapot_weight = 1472
 
-while True:
+def do_work():
+    server_link.send_queued_update_if_time()
+    global last_status, last_number_of_cups
+
     current_weight = weight_sensor.get_reading()
     temperature = temperature_sensor.get_reading()
-    status = get_teapot_status(
-        current_weight=current_weight, temperature=temperature,
-        new_teapot_weight=3042, empty_teapot_weight=1472,
-        cold_teapot_temperature=40, temperature_rising=temperature_sensor.is_rising(), weight_of_tea_in_cup=weight_of_tea_in_cup)
+    is_rising = temperature_sensor.is_rising()
 
-    print status
+    status = teapot_status.get_teapot_status(
+        current_weight, temperature, is_rising)
+
+    if status.teapot_state != last_status or \
+            status.number_of_cups_remaining != last_number_of_cups:
+        ServerCommunicator.send_update(
+            status.teapot_state,
+            status.timestamp,
+            status.number_of_cups_remaining
+        )
+        last_status = status.teapot_state
+        last_number_of_cups = status.number_of_cups_remaining
+
+
+if __name__ == "main":
+    while True:
+        do_work()
