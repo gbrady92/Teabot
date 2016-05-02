@@ -5,6 +5,9 @@ from teapot_state import get_teapot_state_machine
 
 
 class TeapotStatus(object):
+    """Controls the change of states in the teapot state machine based on
+    the environmental parameters passed into get_teapot_status
+    """
 
     def __init__(self):
         self.configuration_constants = Constants()
@@ -12,7 +15,7 @@ class TeapotStatus(object):
     def get_teapot_descriptor(self, teapot_status, number_of_cups_remaining):
         """Returns a named tuple representing the status of the teapot,
         essentially a class of getters with the status and number of cups
-        remaining with a  timestamp added for analytics purposes.
+        remaining with a timestamp added for analytics purposes.
 
         Args:
             teapot_status (string) - Status of the teapot from the constants

@@ -1,16 +1,18 @@
 class TeapotStatuses(object):
-    NEW_TEAPOT = "NEW_TEAPOT"
+    """Defines the states the teapot can be in"""
+
     GOOD_TEAPOT = "GOOD_TEAPOT"
     COLD_TEAPOT = "COLD_TEAPOT"
     NO_TEAPOT = "NO_TEAPOT"
     EMPTY_TEAPOT = "EMPTY_TEAPOT"
-    NEW_BREWED_TEAPOT = "NEW_BREWED_TEAPOT"
-    OLD_BREWED_TEAPOT = "OLD_BREWED_TEAPOT"
-    ERROR_STATE = "HTTP_I_AM_A_TEAPOT"
     FULL_TEAPOT = "FULL_TEAPOT"
 
 
 class Transistions(object):
+    """Defines the states the environment can be in and therefore valid
+    transistions between states in the state machine
+    """
+
     TEMP_RISING_WEIGHT_ABOVE_FULL = "temp_rising_weight_above_full"
     TEMP_BELOW_COLD = "temp_below_cold"
     WEIGHT_BELOW_EMPTY = "weight_below_empty"
@@ -22,6 +24,7 @@ class Transistions(object):
 
 
 class Constants(object):
+    """Defines environmental constants that influence the state of the teapot"""
 
     def __init__(self):
         self.FULL_TEAPOT_WEIGHT = None

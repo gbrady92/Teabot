@@ -1,10 +1,17 @@
 from fysom import Fysom
 from constants import TeapotStatuses, Transistions
 
+# Cached teapot_state_machine, retrive it using get_teapot_state_machine
 teapot_state_machine = None
 
 
 def generate_teapot_state_machine():
+    """Generates the teapot finite state machine defining all of the states
+    and valid transitions between them.
+
+    Returns
+        - Fysom - finite state machine
+    """
     fsm = Fysom({
         'initial': TeapotStatuses.NO_TEAPOT,
         'events': [
@@ -99,6 +106,7 @@ def generate_teapot_state_machine():
 
 
 def get_teapot_state_machine():
+    """Returns a single instance of the teapot finite state machine"""
     global teapot_state_machine
     if not teapot_state_machine:
         teapot_state_machine = generate_teapot_state_machine()

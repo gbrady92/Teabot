@@ -1,6 +1,7 @@
 from unittest import TestCase
 from unittest import main
-from teapot_state import generate_teapot_state_machine
+from teapot_state import generate_teapot_state_machine, \
+    get_teapot_state_machine
 from constants import TeapotStatuses
 
 
@@ -33,6 +34,11 @@ class TestTeapotState(TestCase):
         state_machine.weight_above_empty_below_full()
         state_machine.temp_below_cold_weight_above_empty()
         return state_machine
+
+    def test_get_teapot_state_machine(self):
+        state_machine = get_teapot_state_machine()
+        state_machine_again = get_teapot_state_machine()
+        self.assertTrue(state_machine is state_machine_again)
 
     def test_initial_state(self):
         state_machine = self._get_state_machine_at_initial_state()
