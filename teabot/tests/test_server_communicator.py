@@ -8,9 +8,11 @@ from datetime import datetime
 
 class TestServerCommunicator(TestCase):
 
-    @patch("teabot.server_communicator.requests.post")
-    @patch("teabot.server_communicator.ServerCommunicator._queue_brewed_update")
-    @patch("teabot.server_communicator.Constants")
+    @patch("teabot.server_communicator.requests.post", autospec=True)
+    @patch(
+        "teabot.server_communicator.ServerCommunicator._queue_brewed_update",
+        autospec=True)
+    @patch("teabot.server_communicator.Constants", autospec=True)
     def test_send_status_update_full_teapot(
             self, mock_constants, mock_queue, mock_post):
         mock_constants.return_value = Mock(
@@ -21,7 +23,7 @@ class TestServerCommunicator(TestCase):
         server_communicator.send_status_update(
             TeapotStatuses.FULL_TEAPOT, send_time, 5
         )
-        mock_queue.assert_called_once()
+        mock_queue.assert_called_once_with(server_communicator)
         mock_post.assert_called_once_with(
             "abc",
             data={
@@ -31,9 +33,11 @@ class TestServerCommunicator(TestCase):
             }
         )
 
-    @patch("teabot.server_communicator.requests.post")
-    @patch("teabot.server_communicator.ServerCommunicator._queue_brewed_update")
-    @patch("teabot.server_communicator.Constants")
+    @patch("teabot.server_communicator.requests.post", autospec=True)
+    @patch(
+        "teabot.server_communicator.ServerCommunicator._queue_brewed_update",
+        autospec=True)
+    @patch("teabot.server_communicator.Constants", autospec=True)
     def test_send_status_update_not_full_teapot(
             self, mock_constants, mock_queue, mock_post):
         mock_constants.return_value = Mock(
@@ -54,9 +58,10 @@ class TestServerCommunicator(TestCase):
             }
         )
 
-    @patch("teabot.server_communicator.requests.post")
-    @patch("teabot.server_communicator.Constants")
-    @patch("teabot.server_communicator.ServerCommunicator._get_current_time")
+    @patch("teabot.server_communicator.requests.post", autospec=True)
+    @patch("teabot.server_communicator.Constants", autospec=True)
+    @patch("teabot.server_communicator.ServerCommunicator._get_current_time",
+           autospec=True)
     def test_send_queued_update_not_time_yet(
             self, mock_get_time, mock_constants, mock_post):
         mock_constants.return_value = Mock(
@@ -80,9 +85,10 @@ class TestServerCommunicator(TestCase):
         result = server_communicator.send_queued_update_if_time()
         self.assertFalse(result)
 
-    @patch("teabot.server_communicator.requests.post")
-    @patch("teabot.server_communicator.Constants")
-    @patch("teabot.server_communicator.ServerCommunicator._get_current_time")
+    @patch("teabot.server_communicator.requests.post", autospec=True)
+    @patch("teabot.server_communicator.Constants", autospec=True)
+    @patch("teabot.server_communicator.ServerCommunicator._get_current_time",
+           autospec=True)
     def test_send_queued_update_time(
             self, mock_get_time, mock_constants, mock_post):
         mock_constants.return_value = Mock(

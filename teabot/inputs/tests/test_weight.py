@@ -7,7 +7,7 @@ from mock import patch
 class TestWeight(TestCase):
 
     def setUp(self):
-        self.mock_usb = patch("teabot.inputs.weight.usb")
+        self.mock_usb = patch("teabot.inputs.weight.usb", auto_spec=True)
         self.mock_usb.start()
 
     def tearDown(self):

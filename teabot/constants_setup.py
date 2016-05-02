@@ -28,9 +28,9 @@ print (raw_input('Place full cup on scale and press enter.'))
 store_reading('full_cup')
 
 weight_of_tea = stored_data_dict['full_teapot'] \
- - stored_data_dict['empty_teapot']
+    - stored_data_dict['empty_teapot']
 stored_data_dict['weight_of_tea_in_cup'] = stored_data_dict['full_cup'] \
- - stored_data_dict['empty_cup']
+    - stored_data_dict['empty_cup']
 
 stored_data_dict['cold_tea_temp'] = 40
 

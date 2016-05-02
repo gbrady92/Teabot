@@ -24,7 +24,9 @@ class Transistions(object):
 
 
 class Constants(object):
-    """Defines environmental constants that influence the state of the teapot"""
+    """Defines environmental constants that influence the state of the
+    teapot
+    """
 
     def __init__(self):
         self.FULL_TEAPOT_WEIGHT = None
