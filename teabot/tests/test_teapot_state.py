@@ -144,6 +144,16 @@ class TestTeapotState(TestCase):
             TeapotStatuses.GOOD_TEAPOT
         )
 
+        state_machine = self._get_state_machine_at_good_teapot()
+        self.assertEqual(state_machine.current, TeapotStatuses.GOOD_TEAPOT)
+
+        # Someone ditched the good tea and made even more!
+        state_machine.temp_rising_weight_above_full()
+        self.assertEqual(
+            state_machine.current,
+            TeapotStatuses.FULL_TEAPOT
+        )
+
     def test_empty_teapot(self):
         state_machine = self._get_state_machine_at_empty_teapot()
         self.assertEqual(state_machine.current, TeapotStatuses.EMPTY_TEAPOT)

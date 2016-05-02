@@ -311,6 +311,35 @@ class TestTeapotStatus(TestCase):
             10, 10, temperature_is_rising_or_constant)
         self.assertEqual(result.teapot_state, TeapotStatuses.EMPTY_TEAPOT)
 
+        # Teapot refilled
+        mock_is_full.return_value = True
+        mock_is_cold.return_value = False
+        mock_teapot_empty.return_value = False
+        mock_scale_empty.return_value = False
+        temperature_is_rising_or_constant = True
+        result = teapot_status.get_teapot_status(
+            10, 10, temperature_is_rising_or_constant)
+        self.assertEqual(result.teapot_state, TeapotStatuses.FULL_TEAPOT)
+
+        # Cup drunk
+        mock_is_full.return_value = False
+        mock_is_cold.return_value = False
+        mock_teapot_empty.return_value = False
+        mock_scale_empty.return_value = False
+        temperature_is_rising_or_constant = True
+        result = teapot_status.get_teapot_status(
+            10, 10, temperature_is_rising_or_constant)
+        self.assertEqual(result.teapot_state, TeapotStatuses.GOOD_TEAPOT)
+
+        # Teapot refilled
+        mock_is_full.return_value = True
+        mock_is_cold.return_value = False
+        mock_teapot_empty.return_value = False
+        mock_scale_empty.return_value = False
+        temperature_is_rising_or_constant = True
+        result = teapot_status.get_teapot_status(
+            10, 10, temperature_is_rising_or_constant)
+        self.assertEqual(result.teapot_state, TeapotStatuses.FULL_TEAPOT)
 
 if __name__ == '__main__':
     main()

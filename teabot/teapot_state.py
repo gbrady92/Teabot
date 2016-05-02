@@ -56,6 +56,11 @@ def generate_teapot_state_machine():
                 'dst': TeapotStatuses.GOOD_TEAPOT
             },
             {
+                'name': Transistions.TEMP_RISING_WEIGHT_ABOVE_FULL,
+                'src': TeapotStatuses.GOOD_TEAPOT,
+                'dst': TeapotStatuses.FULL_TEAPOT
+            },
+            {
                 'name': Transistions.SCALES_EMPTY,
                 'src': TeapotStatuses.GOOD_TEAPOT,
                 'dst': TeapotStatuses.GOOD_TEAPOT
