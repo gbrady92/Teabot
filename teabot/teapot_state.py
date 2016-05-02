@@ -1,5 +1,5 @@
 from fysom import Fysom
-from constants import TeapotStatuses, Transistions
+from teabot.constants import TeapotStatuses, Transistions
 
 # Cached teapot_state_machine, retrive it using get_teapot_state_machine
 teapot_state_machine = None

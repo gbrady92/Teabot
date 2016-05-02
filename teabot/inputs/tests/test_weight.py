@@ -1,13 +1,13 @@
 from unittest import TestCase
 from unittest import main
-from weight import Weight
+from teabot.inputs.weight import Weight
 from mock import patch
 
 
 class TestWeight(TestCase):
 
     def setUp(self):
-        self.mock_usb = patch("weight.usb")
+        self.mock_usb = patch("teabot.inputs.weight.usb")
         self.mock_usb.start()
 
     def tearDown(self):

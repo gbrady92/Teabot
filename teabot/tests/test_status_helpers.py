@@ -1,7 +1,7 @@
 from unittest import TestCase
 from unittest import main
-from status_helpers import TeapotStatus
-from constants import TeapotStatuses
+from teabot.status_helpers import TeapotStatus
+from teabot.constants import TeapotStatuses
 from mock import patch, Mock
 
 
@@ -9,7 +9,7 @@ class TestTeapotStatus(TestCase):
 
     def setUp(self):
         self.mock_constants = Mock()
-        self.patcher = patch('status_helpers.Constants')
+        self.patcher = patch('teabot.status_helpers.Constants')
         self.patcher.start()
 
     def tearDown(self):
@@ -23,8 +23,8 @@ class TestTeapotStatus(TestCase):
         self.assertEqual(result.number_of_cups_remaining, 3)
         self.assertTrue(result.timestamp)
 
-    @patch("status_helpers.Constants")
-    @patch("status_helpers.TeapotStatus.get_weight_of_tea_in_pot")
+    @patch("teabot.status_helpers.Constants")
+    @patch("teabot.status_helpers.TeapotStatus.get_weight_of_tea_in_pot")
     def test_teapot_is_full_true(self, mock_get_weight, mock_constants):
         mock_constants.return_value = Mock(
             get_lower_bound_for_full_teapot=Mock(return_value=10)
@@ -34,8 +34,8 @@ class TestTeapotStatus(TestCase):
         result = teapot_status.teapot_is_full(20)
         self.assertTrue(result)
 
-    @patch("status_helpers.Constants")
-    @patch("status_helpers.TeapotStatus.get_weight_of_tea_in_pot")
+    @patch("teabot.status_helpers.Constants")
+    @patch("teabot.status_helpers.TeapotStatus.get_weight_of_tea_in_pot")
     def test_teapot_is_full_false(self, mock_get_weight, mock_constants):
         mock_constants.return_value = Mock(
             get_lower_bound_for_full_teapot=Mock(return_value=10)
@@ -45,7 +45,7 @@ class TestTeapotStatus(TestCase):
         result = teapot_status.teapot_is_full(20)
         self.assertFalse(result)
 
-    @patch("status_helpers.Constants")
+    @patch("teabot.status_helpers.Constants")
     def test_teapot_is_cold_true(self, mock_constants):
         mock_constants.return_value = Mock(
             get_cold_teapot_temperature=Mock(return_value=10)
@@ -54,7 +54,7 @@ class TestTeapotStatus(TestCase):
         result = teapot_status.teapot_is_cold(8)
         self.assertTrue(result)
 
-    @patch("status_helpers.Constants")
+    @patch("teabot.status_helpers.Constants")
     def test_teapot_is_cold_false(self, mock_constants):
         mock_constants.return_value = Mock(
             get_cold_teapot_temperature=Mock(return_value=10)
@@ -63,7 +63,7 @@ class TestTeapotStatus(TestCase):
         result = teapot_status.teapot_is_cold(12)
         self.assertFalse(result)
 
-    @patch("status_helpers.Constants")
+    @patch("teabot.status_helpers.Constants")
     def test_teapot_is_empty_true(self, mock_constants):
         mock_constants.return_value = Mock(
             get_zero_weight=Mock(return_value=0),
@@ -73,7 +73,7 @@ class TestTeapotStatus(TestCase):
         result = teapot_status.teapot_is_empty(8)
         self.assertTrue(result)
 
-    @patch("status_helpers.Constants")
+    @patch("teabot.status_helpers.Constants")
     def test_teapot_is_empty_false(self, mock_constants):
         mock_constants.return_value = Mock(
             get_zero_weight=Mock(return_value=0),
@@ -83,7 +83,7 @@ class TestTeapotStatus(TestCase):
         result = teapot_status.teapot_is_empty(12)
         self.assertFalse(result)
 
-    @patch("status_helpers.Constants")
+    @patch("teabot.status_helpers.Constants")
     def test_scale_is_empty_true(self, mock_constants):
         mock_constants.return_value = Mock(
             get_zero_weight=Mock(return_value=0),
@@ -92,7 +92,7 @@ class TestTeapotStatus(TestCase):
         result = teapot_status.scale_is_empty(0)
         self.assertTrue(result)
 
-    @patch("status_helpers.Constants")
+    @patch("teabot.status_helpers.Constants")
     def test_scale_is_empty_false(self, mock_constants):
         mock_constants.return_value = Mock(
             get_zero_weight=Mock(return_value=0),
@@ -101,7 +101,7 @@ class TestTeapotStatus(TestCase):
         result = teapot_status.scale_is_empty(12)
         self.assertFalse(result)
 
-    @patch("status_helpers.Constants")
+    @patch("teabot.status_helpers.Constants")
     def test_get_weight_of_tea_in_pot(self, mock_constants):
         mock_constants.return_value = Mock(
             get_empty_teapot_weight=Mock(return_value=20),
@@ -110,8 +110,8 @@ class TestTeapotStatus(TestCase):
         result = teapot_status.get_weight_of_tea_in_pot(30)
         self.assertEqual(result, 10)
 
-    @patch("status_helpers.Constants")
-    @patch("status_helpers.TeapotStatus.get_weight_of_tea_in_pot")
+    @patch("teabot.status_helpers.Constants")
+    @patch("teabot.status_helpers.TeapotStatus.get_weight_of_tea_in_pot")
     def test_calculate_number_of_cups_remaining(
             self, mock_get_weight, mock_constants):
         mock_constants.return_value = Mock(
@@ -122,10 +122,10 @@ class TestTeapotStatus(TestCase):
         result = teapot_status.calculate_number_of_cups_remaining(20)
         self.assertEqual(result, 10)
 
-    @patch("status_helpers.TeapotStatus.teapot_is_empty")
-    @patch("status_helpers.TeapotStatus.teapot_is_cold")
-    @patch("status_helpers.TeapotStatus.teapot_is_full")
-    @patch("status_helpers.TeapotStatus.scale_is_empty")
+    @patch("teabot.status_helpers.TeapotStatus.teapot_is_empty")
+    @patch("teabot.status_helpers.TeapotStatus.teapot_is_cold")
+    @patch("teabot.status_helpers.TeapotStatus.teapot_is_full")
+    @patch("teabot.status_helpers.TeapotStatus.scale_is_empty")
     def test_get_teapot_status(
             self, mock_scale_empty, mock_is_full, mock_is_cold,
             mock_teapot_empty):

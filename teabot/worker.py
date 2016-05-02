@@ -1,7 +1,7 @@
-from inputs.weight import Weight
-from inputs.temperature import Temperature
-from status_helpers import TeapotStatus
-from server_communicator import ServerCommunicator
+from teabot.inputs.weight import Weight
+from teabot.inputs.temperature import Temperature
+from teabot.status_helpers import TeapotStatus
+from teabot.server_communicator import ServerCommunicator
 
 weight_sensor = Weight()
 temperature_sensor = Temperature()

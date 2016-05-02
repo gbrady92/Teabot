@@ -1,16 +1,16 @@
 from unittest import TestCase
 from unittest import main
-from server_communicator import ServerCommunicator
-from constants import TeapotStatuses
+from teabot.server_communicator import ServerCommunicator
+from teabot.constants import TeapotStatuses
 from mock import patch, Mock
 from datetime import datetime
 
 
 class TestServerCommunicator(TestCase):
 
-    @patch("server_communicator.requests.post")
-    @patch("server_communicator.ServerCommunicator._queue_brewed_update")
-    @patch("server_communicator.Constants")
+    @patch("teabot.server_communicator.requests.post")
+    @patch("teabot.server_communicator.ServerCommunicator._queue_brewed_update")
+    @patch("teabot.server_communicator.Constants")
     def test_send_status_update_full_teapot(
             self, mock_constants, mock_queue, mock_post):
         mock_constants.return_value = Mock(
@@ -31,9 +31,9 @@ class TestServerCommunicator(TestCase):
             }
         )
 
-    @patch("server_communicator.requests.post")
-    @patch("server_communicator.ServerCommunicator._queue_brewed_update")
-    @patch("server_communicator.Constants")
+    @patch("teabot.server_communicator.requests.post")
+    @patch("teabot.server_communicator.ServerCommunicator._queue_brewed_update")
+    @patch("teabot.server_communicator.Constants")
     def test_send_status_update_not_full_teapot(
             self, mock_constants, mock_queue, mock_post):
         mock_constants.return_value = Mock(
@@ -54,9 +54,9 @@ class TestServerCommunicator(TestCase):
             }
         )
 
-    @patch("server_communicator.requests.post")
-    @patch("server_communicator.Constants")
-    @patch("server_communicator.ServerCommunicator._get_current_time")
+    @patch("teabot.server_communicator.requests.post")
+    @patch("teabot.server_communicator.Constants")
+    @patch("teabot.server_communicator.ServerCommunicator._get_current_time")
     def test_send_queued_update_not_time_yet(
             self, mock_get_time, mock_constants, mock_post):
         mock_constants.return_value = Mock(
@@ -80,9 +80,9 @@ class TestServerCommunicator(TestCase):
         result = server_communicator.send_queued_update_if_time()
         self.assertFalse(result)
 
-    @patch("server_communicator.requests.post")
-    @patch("server_communicator.Constants")
-    @patch("server_communicator.ServerCommunicator._get_current_time")
+    @patch("teabot.server_communicator.requests.post")
+    @patch("teabot.server_communicator.Constants")
+    @patch("teabot.server_communicator.ServerCommunicator._get_current_time")
     def test_send_queued_update_time(
             self, mock_get_time, mock_constants, mock_post):
         mock_constants.return_value = Mock(

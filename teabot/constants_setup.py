@@ -1,7 +1,5 @@
 from __future__ import division
 from inputs.weight import Weight
-import json
-from time import sleep
 
 
 weight_sensor = Weight()
