@@ -1,7 +1,8 @@
+from __future__ import division
 from collections import namedtuple
 from datetime import datetime
-from teabot.constants import Constants, Transistions
-from teabot.teapot_state import get_teapot_state_machine
+from constants import Constants, Transistions
+from teapot_state import get_teapot_state_machine
 
 
 class TeapotStatus(object):
@@ -102,7 +103,9 @@ class TeapotStatus(object):
         return teapot_weight - empty_teapot_weight
 
     def calculate_number_of_cups_remaining(self, teapot_weight):
-        """Determines the number of cups of tea left in the pot
+        """Determines the number of cups of tea left in the pot. Anything
+        greater than or equal to half a cup is rounded up to a full cup
+        anything less is rounded down.
 
         Args:
             teapot_weight - Weight of the teapot
@@ -112,7 +115,7 @@ class TeapotStatus(object):
         weight_of_tea_in_cup = \
             self.configuration_constants.get_weight_of_tea_in_cup()
         tea_weight = self.get_weight_of_tea_in_pot(teapot_weight)
-        return tea_weight / weight_of_tea_in_cup
+        return round(tea_weight / weight_of_tea_in_cup)
 
     def get_teapot_status(
             self, teapot_weight, teapot_temperature,
@@ -145,6 +148,7 @@ class TeapotStatus(object):
             teapot_temperature_is_rising_or_constant
 
         new_status = None
+        print "state at start is", state_machine.current
         # This condition and (not teapot_empty and not teapot_full) are not
         # mutually exclusive if the scales are empty teapot_empty returns
         # False as does teapot_full.

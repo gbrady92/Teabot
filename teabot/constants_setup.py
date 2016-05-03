@@ -34,7 +34,7 @@ stored_data_dict['weight_of_tea_in_cup'] = stored_data_dict['full_cup'] \
 
 stored_data_dict['cold_tea_temp'] = 40
 
-for i in stored_data_dict.keys():
-    print stored_data_dict[i]
+for i, j in stored_data_dict.iteritems():
+    print i, j
 
 print 'Setup Complete.'

@@ -40,25 +40,25 @@ class Constants(object):
     def get_full_teapot_weight(self):
         if not self.FULL_TEAPOT_WEIGHT:
             # TODO Replace with actual database lookup
-            self.FULL_TEAPOT_WEIGHT = 2
+            self.FULL_TEAPOT_WEIGHT = 796
         return self.FULL_TEAPOT_WEIGHT
 
     def get_empty_teapot_weight(self):
         if not self.EMPTY_TEAPOT_WEIGHT:
             # TODO Replace with actual database lookup
-            self.EMPTY_TEAPOT_WEIGHT = 1
+            self.EMPTY_TEAPOT_WEIGHT = 58
         return self.EMPTY_TEAPOT_WEIGHT
 
     def get_cold_teapot_temperature(self):
         if not self.COLD_TEAPOT_TEMPERATURE:
             # TODO Replace with actual database lookup
-            self.COLD_TEAPOT_TEMPERATURE = 1
+            self.COLD_TEAPOT_TEMPERATURE = 30
         return self.COLD_TEAPOT_TEMPERATURE
 
     def get_weight_of_tea_in_cup(self):
         if not self.WEIGHT_OF_TEA_IN_CUP:
             # TODO Replace with actual database lookup
-            self.WEIGHT_OF_TEA_IN_CUP = 0.5
+            self.WEIGHT_OF_TEA_IN_CUP = 280
         return self.WEIGHT_OF_TEA_IN_CUP
 
     def get_zero_weight(self):
@@ -84,4 +84,4 @@ class Constants(object):
 
     def get_lower_bound_for_full_teapot(self):
         return self.get_weight_of_tea_in_full_teapot() - \
-            self.get_weight_of_tea_in_cup()
+            (self.get_weight_of_tea_in_cup() / 2)

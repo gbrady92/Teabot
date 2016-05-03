@@ -1,7 +1,8 @@
-from teabot.inputs.weight import Weight
-from teabot.inputs.temperature import Temperature
-from teabot.status_helpers import TeapotStatus
-from teabot.server_communicator import ServerCommunicator
+from inputs.weight import Weight
+from inputs.temperature import Temperature
+from status_helpers import TeapotStatus
+from server_communicator import ServerCommunicator
+from constants import TeapotStatuses
 
 weight_sensor = Weight()
 temperature_sensor = Temperature()
@@ -32,15 +33,23 @@ def do_work():
 
     if status.teapot_state != last_status or \
             status.number_of_cups_remaining != last_number_of_cups:
-        ServerCommunicator.send_update(
+
+        if status.number_of_cups_remaining == 0 and \
+                status.teapot_state != TeapotStatuses.EMPTY_TEAPOT:
+                    return
+        server_link.send_status_update(
             status.teapot_state,
             status.timestamp,
             status.number_of_cups_remaining
         )
+        print status.teapot_state
+        print status.number_of_cups_remaining
         last_status = status.teapot_state
         last_number_of_cups = status.number_of_cups_remaining
+    else:
+        print "status hasn't changed"
 
 
-if __name__ == "main":
+if __name__ == "__main__":
     while True:
         do_work()

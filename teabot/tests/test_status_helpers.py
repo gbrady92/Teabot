@@ -3,6 +3,7 @@ from unittest import main
 from teabot.status_helpers import TeapotStatus
 from teabot.constants import TeapotStatuses
 from mock import patch, Mock
+from teabot.teapot_state import generate_teapot_state_machine
 
 
 class TestTeapotStatus(TestCase):
@@ -115,7 +116,7 @@ class TestTeapotStatus(TestCase):
     @patch("teabot.status_helpers.Constants", auto_spec=True)
     @patch("teabot.status_helpers.TeapotStatus.get_weight_of_tea_in_pot",
            auto_spec=True)
-    def test_calculate_number_of_cups_remaining(
+    def test_calculate_number_of_cups_remaining_whole_cups(
             self, mock_get_weight, mock_constants):
         mock_constants.return_value = Mock(
             get_weight_of_tea_in_cup=Mock(return_value=2),
@@ -124,6 +125,32 @@ class TestTeapotStatus(TestCase):
         teapot_status = TeapotStatus()
         result = teapot_status.calculate_number_of_cups_remaining(20)
         self.assertEqual(result, 10)
+
+    @patch("teabot.status_helpers.Constants", auto_spec=True)
+    @patch("teabot.status_helpers.TeapotStatus.get_weight_of_tea_in_pot",
+           auto_spec=True)
+    def test_calculate_number_of_cups_remaining_greater_than_half(
+            self, mock_get_weight, mock_constants):
+        mock_constants.return_value = Mock(
+            get_weight_of_tea_in_cup=Mock(return_value=3),
+        )
+        mock_get_weight.return_value = 20
+        teapot_status = TeapotStatus()
+        result = teapot_status.calculate_number_of_cups_remaining(20)
+        self.assertEqual(result, 7)
+
+    @patch("teabot.status_helpers.Constants", auto_spec=True)
+    @patch("teabot.status_helpers.TeapotStatus.get_weight_of_tea_in_pot",
+           auto_spec=True)
+    def test_calculate_number_of_cups_remaining_less_than_half(
+            self, mock_get_weight, mock_constants):
+        mock_constants.return_value = Mock(
+            get_weight_of_tea_in_cup=Mock(return_value=6),
+        )
+        mock_get_weight.return_value = 20
+        teapot_status = TeapotStatus()
+        result = teapot_status.calculate_number_of_cups_remaining(20)
+        self.assertEqual(result, 3)
 
     @patch("teabot.status_helpers.TeapotStatus.teapot_is_empty",
            auto_spec=True)
@@ -344,6 +371,122 @@ class TestTeapotStatus(TestCase):
         result = teapot_status.get_teapot_status(
             10, 10, temperature_is_rising_or_constant)
         self.assertEqual(result.teapot_state, TeapotStatuses.FULL_TEAPOT)
+
+        # Full teapot sits there
+        mock_is_full.return_value = True
+        mock_is_cold.return_value = False
+        mock_teapot_empty.return_value = False
+        mock_scale_empty.return_value = False
+        temperature_is_rising_or_constant = True
+        result = teapot_status.get_teapot_status(
+            10, 10, temperature_is_rising_or_constant)
+        self.assertEqual(result.teapot_state, TeapotStatuses.FULL_TEAPOT)
+
+        # Full teapot goes cold
+        mock_is_full.return_value = True
+        mock_is_cold.return_value = True
+        mock_teapot_empty.return_value = False
+        mock_scale_empty.return_value = False
+        temperature_is_rising_or_constant = False
+        result = teapot_status.get_teapot_status(
+            10, 10, temperature_is_rising_or_constant)
+        self.assertEqual(result.teapot_state, TeapotStatuses.COLD_TEAPOT)
+
+    @patch("teabot.status_helpers.TeapotStatus.teapot_is_empty",
+           auto_spec=True)
+    @patch("teabot.status_helpers.TeapotStatus.teapot_is_cold", auto_spec=True)
+    @patch("teabot.status_helpers.TeapotStatus.teapot_is_full", auto_spec=True)
+    @patch("teabot.status_helpers.TeapotStatus.scale_is_empty", auto_spec=True)
+    @patch("teabot.status_helpers.get_teapot_state_machine", auto_spec=True)
+    def test_get_teapot_status_nothing_to_empty(
+            self, mock_state_machine, mock_scale_empty, mock_is_full,
+            mock_is_cold, mock_teapot_empty):
+        mock_state_machine.return_value = generate_teapot_state_machine()
+        teapot_status = TeapotStatus()
+
+        # Initialy started up and scales are empty
+        mock_is_full.return_value = False
+        mock_is_cold.return_value = False
+        mock_teapot_empty.return_value = False
+        mock_scale_empty.return_value = True
+        temperature_is_rising_or_constant = False
+        result = teapot_status.get_teapot_status(
+            10, 10, temperature_is_rising_or_constant)
+        self.assertEqual(result.teapot_state, TeapotStatuses.NO_TEAPOT)
+
+        # Empty teapot places on scales
+        mock_is_full.return_value = False
+        mock_is_cold.return_value = False
+        mock_teapot_empty.return_value = True
+        mock_scale_empty.return_value = False
+        temperature_is_rising_or_constant = False
+        result = teapot_status.get_teapot_status(
+            10, 10, temperature_is_rising_or_constant)
+        self.assertEqual(result.teapot_state, TeapotStatuses.EMPTY_TEAPOT)
+
+    @patch("teabot.status_helpers.TeapotStatus.teapot_is_empty",
+           auto_spec=True)
+    @patch("teabot.status_helpers.TeapotStatus.teapot_is_cold", auto_spec=True)
+    @patch("teabot.status_helpers.TeapotStatus.teapot_is_full", auto_spec=True)
+    @patch("teabot.status_helpers.TeapotStatus.scale_is_empty", auto_spec=True)
+    @patch("teabot.status_helpers.get_teapot_state_machine", auto_spec=True)
+    def test_get_teapot_status_nothing_to_cold(
+            self, mock_state_machine, mock_scale_empty, mock_is_full,
+            mock_is_cold, mock_teapot_empty):
+        mock_state_machine.return_value = generate_teapot_state_machine()
+        teapot_status = TeapotStatus()
+
+        # Initialy started up and scales are empty
+        mock_is_full.return_value = False
+        mock_is_cold.return_value = False
+        mock_teapot_empty.return_value = False
+        mock_scale_empty.return_value = True
+        temperature_is_rising_or_constant = False
+        result = teapot_status.get_teapot_status(
+            10, 10, temperature_is_rising_or_constant)
+        self.assertEqual(result.teapot_state, TeapotStatuses.NO_TEAPOT)
+
+        # Cold teapot placed on scales
+        mock_is_full.return_value = False
+        mock_is_cold.return_value = True
+        mock_teapot_empty.return_value = False
+        mock_scale_empty.return_value = False
+        temperature_is_rising_or_constant = False
+        result = teapot_status.get_teapot_status(
+            10, 10, temperature_is_rising_or_constant)
+        self.assertEqual(result.teapot_state, TeapotStatuses.COLD_TEAPOT)
+
+    @patch("teabot.status_helpers.TeapotStatus.teapot_is_empty",
+           auto_spec=True)
+    @patch("teabot.status_helpers.TeapotStatus.teapot_is_cold", auto_spec=True)
+    @patch("teabot.status_helpers.TeapotStatus.teapot_is_full", auto_spec=True)
+    @patch("teabot.status_helpers.TeapotStatus.scale_is_empty", auto_spec=True)
+    @patch("teabot.status_helpers.get_teapot_state_machine", auto_spec=True)
+    def test_get_teapot_status_nothing_to_good(
+            self, mock_state_machine, mock_scale_empty, mock_is_full,
+            mock_is_cold, mock_teapot_empty):
+        mock_state_machine.return_value = generate_teapot_state_machine()
+        teapot_status = TeapotStatus()
+
+        # Initialy started up and scales are empty
+        mock_is_full.return_value = False
+        mock_is_cold.return_value = False
+        mock_teapot_empty.return_value = False
+        mock_scale_empty.return_value = True
+        temperature_is_rising_or_constant = False
+        result = teapot_status.get_teapot_status(
+            10, 10, temperature_is_rising_or_constant)
+        self.assertEqual(result.teapot_state, TeapotStatuses.NO_TEAPOT)
+
+        # Good teapot placed on scales
+        mock_is_full.return_value = False
+        mock_is_cold.return_value = False
+        mock_teapot_empty.return_value = False
+        mock_scale_empty.return_value = False
+        temperature_is_rising_or_constant = False
+        result = teapot_status.get_teapot_status(
+            10, 10, temperature_is_rising_or_constant)
+        self.assertEqual(result.teapot_state, TeapotStatuses.GOOD_TEAPOT)
 
 if __name__ == '__main__':
     main()

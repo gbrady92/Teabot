@@ -26,7 +26,7 @@ class TestConstants(TestCase):
         mock_empty.return_value = 20
         mock_full.return_value = 100
         result = Constants().get_lower_bound_for_full_teapot()
-        self.assertEqual(result, 75)
+        self.assertEqual(result, 78)
 
 
 if __name__ == '__main__':
