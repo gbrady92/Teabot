@@ -1,6 +1,7 @@
 import requests
 from constants import TeapotStatuses, Constants
 from datetime import datetime, timedelta
+import json
 
 
 class ServerCommunicator(object):
@@ -30,11 +31,11 @@ class ServerCommunicator(object):
 
         requests.post(
             self.constants.get_endpoint_base_url(),
-            data={
+            data=json.dumps({
                 "state": status,
-                "timestamp": timestamp,
+                "timestamp": timestamp.isoformat(),
                 "num_of_cups": number_of_cups_remaining
-            }
+            })
         )
 
     def _queue_brewed_update(self):

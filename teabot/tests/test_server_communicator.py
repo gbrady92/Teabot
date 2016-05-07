@@ -4,6 +4,7 @@ from teabot.server_communicator import ServerCommunicator
 from teabot.constants import TeapotStatuses
 from mock import patch, Mock
 from datetime import datetime
+import json
 
 
 class TestServerCommunicator(TestCase):
@@ -26,11 +27,11 @@ class TestServerCommunicator(TestCase):
         mock_queue.assert_called_once_with(server_communicator)
         mock_post.assert_called_once_with(
             "abc",
-            data={
+            data=json.dumps({
                 "state": TeapotStatuses.FULL_TEAPOT,
-                "timestamp": send_time,
+                "timestamp": send_time.isoformat(),
                 "num_of_cups": 5
-            }
+            })
         )
 
     @patch("teabot.server_communicator.requests.post", autospec=True)
@@ -51,11 +52,11 @@ class TestServerCommunicator(TestCase):
         self.assertFalse(mock_queue.call_count)
         mock_post.assert_called_once_with(
             "abc",
-            data={
+            data=json.dumps({
                 "state": TeapotStatuses.GOOD_TEAPOT,
-                "timestamp": send_time,
+                "timestamp": send_time.isoformat(),
                 "num_of_cups": 5
-            }
+            })
         )
 
     @patch("teabot.server_communicator.requests.post", autospec=True)
