@@ -115,7 +115,8 @@ class TeapotStatus(object):
         weight_of_tea_in_cup = \
             self.configuration_constants.get_weight_of_tea_in_cup()
         tea_weight = self.get_weight_of_tea_in_pot(teapot_weight)
-        return round(tea_weight / weight_of_tea_in_cup)
+        print "exact number of cups left", tea_weight / weight_of_tea_in_cup
+        return int(round(tea_weight / weight_of_tea_in_cup))
 
     def get_teapot_status(
             self, teapot_weight, teapot_temperature,

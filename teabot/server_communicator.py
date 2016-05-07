@@ -30,7 +30,7 @@ class ServerCommunicator(object):
             self._queue_brewed_update()
 
         requests.post(
-            self.constants.get_endpoint_base_url(),
+            self.constants.get_endpoint_base_url() + "storeState",
             data=json.dumps({
                 "state": status,
                 "timestamp": timestamp.isoformat(),

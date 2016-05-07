@@ -1,3 +1,4 @@
 *.pyc
 .session.vim
 .tox
+supervise/

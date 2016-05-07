@@ -52,7 +52,7 @@ class Constants(object):
     def get_cold_teapot_temperature(self):
         if not self.COLD_TEAPOT_TEMPERATURE:
             # TODO Replace with actual database lookup
-            self.COLD_TEAPOT_TEMPERATURE = 30
+            self.COLD_TEAPOT_TEMPERATURE = 20
         return self.COLD_TEAPOT_TEMPERATURE
 
     def get_weight_of_tea_in_cup(self):
@@ -76,7 +76,7 @@ class Constants(object):
     def get_endpoint_base_url(self):
         if not self.ENDPOINT_BASE_URL:
             # TODO Replace with actual database lookup
-            self.ENDPOINT_BASE_URL = ""
+            self.ENDPOINT_BASE_URL = "https://teabot.co.uk/"
         return self.ENDPOINT_BASE_URL
 
     def get_weight_of_tea_in_full_teapot(self):
