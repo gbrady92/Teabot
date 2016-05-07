@@ -5,6 +5,7 @@ from itertools import tee
 
 
 class Temperature(object):
+    """Controls interactions with the Temperature sensor"""
 
     def __init__(self):
         # Initialize the GPIO Pins
@@ -38,17 +39,23 @@ class Temperature(object):
         equals_pos = lines[1].find('t=')
 
         if equals_pos != -1:
-            temp_string = lines[1][equals_pos+2:]
+            temp_string = lines[1][equals_pos + 2:]
             temp_c = float(temp_string) / 1000.0
             return temp_c
 
-    def is_rising(self):
+    def is_rising_or_constant(self):
+        """Used to determine if the temperature being read is increasing or
+        constant. By polling the sensor 10 times and analysing the output
+
+        Returns:
+            Boolean - True if the majority of the 10 readings obtained are
+            increasing or the same
+        """
         set_of_readings = [self.get_reading() for _ in range(0, 10)]
         number_rising = 0
         number_falling = 0
         for x, y in self.pairwise(set_of_readings):
             if y >= x:
-                print "y is greater than x"
                 number_rising += 1
             else:
                 number_falling += 1
@@ -57,8 +64,13 @@ class Temperature(object):
         return False
 
     def pairwise(self, iterable):
-        "s -> (s0,s1), (s1,s2), (s2, s3), ..."
+        """From the itertools recipes takes an iterable and returns overlapping
+        pairs e.g.
+            s -> (s0,s1), (s1,s2), (s2, s3), ...
+
+        Returns:
+            Iterable
+        """
         a, b = tee(iterable)
         next(b, None)
         return zip(a, b)
-

@@ -6,24 +6,34 @@ PRODUCT_ID = 0x8006
 
 
 class Weight(object):
+    """Controls interactions with the scales"""
 
     def __init__(self):
         self.device = usb.core.find(idVendor=VENDOR_ID, idProduct=PRODUCT_ID)
 
         if self.device.is_kernel_driver_active(0):
             self.device.detach_kernel_driver(0)
-        # use the first/default configuration
+            # use the first/default configuration
             self.device.set_configuration()
 
-    def most_common(self, lst):
-        # Returns the most common value in the list
-        return max(lst, key=lst.count)
+    def most_common(self, list_of_readings):
+        """Returns the most common value amongst the list of readings passed
+        in.
+
+        Args:
+            list_of_readings (list) - List of readings obtained from the scales
+        Returns:
+            Float - most common reading in list
+        """
+        return max(list_of_readings, key=list_of_readings.count)
 
     def get_reading(self):
-        """Multiple readings from the scale are used as old values may be
-         returned from scale.
-           Scale readings are converted into grams and appended to read list.
-           The most common value in the list is returned.
+        """Returns the weight of the item on the scales in grams, testing has
+        found that old values may be returned from the scales so multiple
+        readings are taken and the most common is returned.
+
+        Returns:
+            Float - Weight of item on scales in grams
         """
         read_list = []
         endpoint = self.device[0][(0, 0)][0]
@@ -40,5 +50,5 @@ class Weight(object):
             data = self.most_common(read_list)
             return data
         except Exception:
-                print "SOMETHING WENT HORRIBLY WRONG"
+                print "Exception reading value from scales, may be expected"
                 pass

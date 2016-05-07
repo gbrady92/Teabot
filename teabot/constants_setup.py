@@ -1,7 +1,5 @@
 from __future__ import division
 from inputs.weight import Weight
-import json
-from time import sleep
 
 
 weight_sensor = Weight()
@@ -30,13 +28,13 @@ print (raw_input('Place full cup on scale and press enter.'))
 store_reading('full_cup')
 
 weight_of_tea = stored_data_dict['full_teapot'] \
- - stored_data_dict['empty_teapot']
+    - stored_data_dict['empty_teapot']
 stored_data_dict['weight_of_tea_in_cup'] = stored_data_dict['full_cup'] \
- - stored_data_dict['empty_cup']
+    - stored_data_dict['empty_cup']
 
 stored_data_dict['cold_tea_temp'] = 40
 
-for i in stored_data_dict.keys():
-    print stored_data_dict[i]
+for i, j in stored_data_dict.iteritems():
+    print i, j
 
 print 'Setup Complete.'
