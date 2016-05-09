@@ -91,7 +91,9 @@ class TeapotStatus(object):
         return teapot_weight <= zero_weight
 
     def get_weight_of_tea_in_pot(self, teapot_weight):
-        """Returns the weight of the tea in the pot
+        """Returns the weight of the tea in the pot. Hides any issues with
+        this method being called when the teapot has been lifted from the
+        scales by never returning a value below 0
 
         Args:
             teapot_weight - The current weight of the teapot
@@ -100,7 +102,7 @@ class TeapotStatus(object):
         """
         empty_teapot_weight = \
             self.configuration_constants.get_empty_teapot_weight()
-        return teapot_weight - empty_teapot_weight
+        return max((teapot_weight - empty_teapot_weight), 0)
 
     def calculate_number_of_cups_remaining(self, teapot_weight):
         """Determines the number of cups of tea left in the pot. Anything

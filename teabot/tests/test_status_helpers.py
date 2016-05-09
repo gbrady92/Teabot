@@ -114,6 +114,15 @@ class TestTeapotStatus(TestCase):
         self.assertEqual(result, 10)
 
     @patch("teabot.status_helpers.Constants", auto_spec=True)
+    def test_get_weight_of_tea_in_pot_empty_scales(self, mock_constants):
+        mock_constants.return_value = Mock(
+            get_empty_teapot_weight=Mock(return_value=20),
+        )
+        teapot_status = TeapotStatus()
+        result = teapot_status.get_weight_of_tea_in_pot(0)
+        self.assertEqual(result, 0)
+
+    @patch("teabot.status_helpers.Constants", auto_spec=True)
     @patch("teabot.status_helpers.TeapotStatus.get_weight_of_tea_in_pot",
            auto_spec=True)
     def test_calculate_number_of_cups_remaining_whole_cups(
