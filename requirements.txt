@@ -1,3 +1,4 @@
 fysom==2.1.2
 pyusb==1.0.0
 requests==2.10.0
+rollbar==0.12.1

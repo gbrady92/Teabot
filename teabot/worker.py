@@ -3,6 +3,7 @@ from inputs.temperature import Temperature
 from status_helpers import TeapotStatus
 from server_communicator import ServerCommunicator
 from constants import TeapotStatuses
+import rollbar
 
 weight_sensor = Weight()
 temperature_sensor = Temperature()
@@ -10,6 +11,7 @@ server_link = ServerCommunicator()
 teapot_status = TeapotStatus()
 last_status = None
 last_number_of_cups = None
+rollbar.init("")
 
 
 def do_work():
@@ -52,4 +54,8 @@ def do_work():
 
 if __name__ == "__main__":
     while True:
-        do_work()
+        try:
+            do_work()
+        except Exception as e:
+            rollbar.report_exc_info()
+            raise
