@@ -34,7 +34,7 @@ def do_work():
     if status.teapot_state != last_status or \
             status.number_of_cups_remaining != last_number_of_cups:
 
-        if status.number_of_cups_remaining == 0 and \
+        if status.number_of_cups_remaining <= 0 and \
                 status.teapot_state != TeapotStatuses.EMPTY_TEAPOT:
                     return
         server_link.send_status_update(
