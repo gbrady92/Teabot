@@ -224,6 +224,16 @@ class TestTeapotState(TestCase):
             TeapotStatuses.EMPTY_TEAPOT
         )
 
+        state_machine = self._get_state_machine_at_empty_teapot()
+        self.assertEqual(state_machine.current, TeapotStatuses.EMPTY_TEAPOT)
+
+        # Empty pot lifted off scales
+        state_machine.weight_above_empty_below_full()
+        self.assertEqual(
+            state_machine.current,
+            TeapotStatuses.GOOD_TEAPOT
+        )
+
     def test_cold_teapot(self):
         state_machine = self._get_state_machine_at_cold_teapot()
         self.assertEqual(state_machine.current, TeapotStatuses.COLD_TEAPOT)

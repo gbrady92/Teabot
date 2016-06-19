@@ -401,6 +401,26 @@ class TestTeapotStatus(TestCase):
             10, 10, temperature_is_rising_or_constant)
         self.assertEqual(result.teapot_state, TeapotStatuses.COLD_TEAPOT)
 
+        # Full teapot is drank and now teapot is empty
+        mock_is_full.return_value = False
+        mock_is_cold.return_value = True
+        mock_teapot_empty.return_value = True
+        mock_scale_empty.return_value = False
+        temperature_is_rising_or_constant = False
+        result = teapot_status.get_teapot_status(
+            10, 10, temperature_is_rising_or_constant)
+        self.assertEqual(result.teapot_state, TeapotStatuses.EMPTY_TEAPOT)
+
+        # Good teapot placed on scales
+        mock_is_full.return_value = False
+        mock_is_cold.return_value = False
+        mock_teapot_empty.return_value = False
+        mock_scale_empty.return_value = False
+        temperature_is_rising_or_constant = True
+        result = teapot_status.get_teapot_status(
+            10, 10, temperature_is_rising_or_constant)
+        self.assertEqual(result.teapot_state, TeapotStatuses.GOOD_TEAPOT)
+
     @patch("teabot.status_helpers.TeapotStatus.teapot_is_empty",
            auto_spec=True)
     @patch("teabot.status_helpers.TeapotStatus.teapot_is_cold", auto_spec=True)

@@ -124,6 +124,11 @@ def generate_teapot_state_machine():
                 'name': Transistions.SCALES_EMPTY,
                 'src': TeapotStatuses.EMPTY_TEAPOT,
                 'dst': TeapotStatuses.EMPTY_TEAPOT
+            },
+            {
+                'name': Transistions.WEIGHT_ABOVE_EMPTY_BELOW_FULL,
+                'src': TeapotStatuses.EMPTY_TEAPOT,
+                'dst': TeapotStatuses.GOOD_TEAPOT
             }
         ]
     })
