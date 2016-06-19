@@ -17,7 +17,7 @@ class TestServerCommunicator(TestCase):
     def test_send_status_update_full_teapot(
             self, mock_constants, mock_queue, mock_post):
         mock_constants.return_value = Mock(
-            get_endpoint_base_url=Mock(return_value="abc")
+            get_endpoint_base_url=Mock(return_value="abc/")
         )
         server_communicator = ServerCommunicator()
         send_time = datetime.now()
@@ -26,7 +26,7 @@ class TestServerCommunicator(TestCase):
         )
         mock_queue.assert_called_once_with(server_communicator)
         mock_post.assert_called_once_with(
-            "abc",
+            "abc/storeState",
             data=json.dumps({
                 "state": TeapotStatuses.FULL_TEAPOT,
                 "timestamp": send_time.isoformat(),
@@ -42,7 +42,7 @@ class TestServerCommunicator(TestCase):
     def test_send_status_update_not_full_teapot(
             self, mock_constants, mock_queue, mock_post):
         mock_constants.return_value = Mock(
-            get_endpoint_base_url=Mock(return_value="abc")
+            get_endpoint_base_url=Mock(return_value="abc/")
         )
         server_communicator = ServerCommunicator()
         send_time = datetime.now()
@@ -51,7 +51,7 @@ class TestServerCommunicator(TestCase):
         )
         self.assertFalse(mock_queue.call_count)
         mock_post.assert_called_once_with(
-            "abc",
+            "abc/storeState",
             data=json.dumps({
                 "state": TeapotStatuses.GOOD_TEAPOT,
                 "timestamp": send_time.isoformat(),
