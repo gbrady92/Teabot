@@ -51,4 +51,4 @@ class Weight(object):
             return data
         except Exception:
                 print "Exception reading value from scales, may be expected"
-                pass
+                return 0
