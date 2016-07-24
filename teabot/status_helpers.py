@@ -12,6 +12,9 @@ class TeapotStatus(object):
 
     def __init__(self):
         self.configuration_constants = Constants()
+        # Initially set to the oldest value possible so the first full teapot
+        # is always full
+        self.last_full_teapot_time = datetime.min
 
     def get_teapot_descriptor(self, teapot_status, number_of_cups_remaining):
         """Returns a named tuple representing the status of the teapot,
@@ -120,6 +123,27 @@ class TeapotStatus(object):
         print "exact number of cups left", tea_weight / weight_of_tea_in_cup
         return int(round(tea_weight / weight_of_tea_in_cup))
 
+    def get_current_time(self):
+        """Wrapper around datetime.now() so that we can mock it in testing"""
+        return datetime.now()
+
+    def new_teapot_is_not_duplicate(self):
+        """Determines if enough time has passed since the last full teapot that
+        this one could be a new one.
+
+        Args:
+            -
+        Returns:
+            - True if this teapot is not a duplicate new teapot false otherwise
+        """
+        refresh_time = self.last_full_teapot_time + \
+            self.configuration_constants.get_new_teapot_refresh_period()
+        current_time = self.get_current_time()
+        if current_time >= refresh_time:
+            self.last_full_teapot_time = current_time
+            return True
+        return False
+
     def get_teapot_status(
             self, teapot_weight, teapot_temperature,
             teapot_temperature_is_rising_or_constant):
@@ -161,8 +185,16 @@ class TeapotStatus(object):
         if scale_empty:
             new_status = state_machine.current
         elif teapot_temperature_is_rising_or_constant and teapot_full:
-            getattr(
-                state_machine, Transistions.TEMP_RISING_WEIGHT_ABOVE_FULL)()
+            if self.new_teapot_is_not_duplicate():
+                getattr(
+                    state_machine,
+                    Transistions.TEMP_RISING_WEIGHT_ABOVE_FULL)()
+            else:
+                # This makes the teapot state be GOOD_TEAPOT and we don't
+                # have to worry about duplicate new teapot alerts
+                getattr(
+                    state_machine,
+                    Transistions.WEIGHT_ABOVE_EMPTY_BELOW_FULL)()
             new_status = state_machine.current
         elif not teapot_empty and not teapot_full and not teapot_cold:
             getattr(

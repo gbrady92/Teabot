@@ -1,3 +1,6 @@
+from datetime import timedelta
+
+
 class TeapotStatuses(object):
     """Defines the states the teapot can be in"""
 
@@ -36,6 +39,7 @@ class Constants(object):
         self.ZERO_WEIGHT = None
         self.BREW_DELAY_MINUTES = None
         self.ENDPOINT_BASE_URL = None
+        self.NEW_TEAPOT_REFRESH_PERIOD = None
 
     def get_full_teapot_weight(self):
         if not self.FULL_TEAPOT_WEIGHT:
@@ -85,3 +89,9 @@ class Constants(object):
     def get_lower_bound_for_full_teapot(self):
         return self.get_weight_of_tea_in_full_teapot() - \
             (self.get_weight_of_tea_in_cup() / 2)
+
+    def get_new_teapot_refresh_period(self):
+        if not self.NEW_TEAPOT_REFRESH_PERIOD:
+            # TODO Replace with actual database lookup
+            self.NEW_TEAPOT_REFRESH_PERIOD = timedelta(minutes=20)
+        return self.NEW_TEAPOT_REFRESH_PERIOD
