@@ -1,5 +1,6 @@
 from unittest import TestCase
 from unittest import main
+from datetime import datetime, timedelta
 from teabot.status_helpers import TeapotStatus
 from teabot.constants import TeapotStatuses
 from mock import patch, Mock
@@ -516,6 +517,98 @@ class TestTeapotStatus(TestCase):
         result = teapot_status.get_teapot_status(
             10, 10, temperature_is_rising_or_constant)
         self.assertEqual(result.teapot_state, TeapotStatuses.GOOD_TEAPOT)
+
+    @patch("teabot.status_helpers.Constants", auto_spec=True)
+    @patch(
+        "teabot.status_helpers.TeapotStatus.get_current_time", auto_spec=True)
+    def test_new_teapot_is_not_duplicate(self, mock_now, mock_constants):
+        mock_now.side_effect = iter([
+            datetime(2016, 1, 1, 12, 0, 0),
+            datetime(2016, 1, 1, 12, 1, 0),
+        ])
+        mock_constants.return_value = Mock(
+            get_new_teapot_refresh_period=Mock(
+                return_value=timedelta(minutes=10)
+            )
+        )
+        teapot_status = TeapotStatus()
+        result = teapot_status.new_teapot_is_not_duplicate()
+        self.assertTrue(result)
+
+        result = teapot_status.new_teapot_is_not_duplicate()
+        self.assertFalse(result)
+
+    @patch("teabot.status_helpers.Constants", auto_spec=True)
+    @patch(
+        "teabot.status_helpers.TeapotStatus.get_current_time", auto_spec=True)
+    @patch("teabot.status_helpers.TeapotStatus.teapot_is_empty",
+           auto_spec=True)
+    @patch("teabot.status_helpers.TeapotStatus.teapot_is_cold", auto_spec=True)
+    @patch("teabot.status_helpers.TeapotStatus.teapot_is_full", auto_spec=True)
+    @patch("teabot.status_helpers.TeapotStatus.scale_is_empty", auto_spec=True)
+    @patch("teabot.status_helpers.get_teapot_state_machine", auto_spec=True)
+    def test_get_teapot_status_no_duplicate_full_pots(
+            self, mock_state_machine, mock_scale_empty, mock_is_full,
+            mock_is_cold, mock_teapot_empty, mock_now, mock_constants):
+
+        mock_now.side_effect = iter([
+            datetime(2016, 1, 1, 12, 29, 0),
+            datetime(2016, 1, 1, 12, 30, 0),
+            datetime(2016, 1, 1, 12, 50, 0)
+        ])
+        mock_constants.return_value = Mock(
+            get_new_teapot_refresh_period=Mock(
+                return_value=timedelta(minutes=10)
+            ),
+            get_empty_teapot_weight=Mock(
+                return_value=10
+            ),
+            get_weight_of_tea_in_cup=Mock(
+                return_value=10
+            )
+        )
+        mock_state_machine.return_value = generate_teapot_state_machine()
+        teapot_status = TeapotStatus()
+
+        # Initialy started up and scales are empty
+        mock_is_full.return_value = False
+        mock_is_cold.return_value = False
+        mock_teapot_empty.return_value = False
+        mock_scale_empty.return_value = True
+        temperature_is_rising_or_constant = False
+        result = teapot_status.get_teapot_status(
+            10, 10, temperature_is_rising_or_constant)
+        self.assertEqual(result.teapot_state, TeapotStatuses.NO_TEAPOT)
+
+        # Full teapot placed on scales
+        mock_is_full.return_value = True
+        mock_is_cold.return_value = False
+        mock_teapot_empty.return_value = False
+        mock_scale_empty.return_value = False
+        temperature_is_rising_or_constant = True
+        result = teapot_status.get_teapot_status(
+            10, 10, temperature_is_rising_or_constant)
+        self.assertEqual(result.teapot_state, TeapotStatuses.FULL_TEAPOT)
+
+        # Full teapot lifted and placed down again
+        mock_is_full.return_value = True
+        mock_is_cold.return_value = False
+        mock_teapot_empty.return_value = False
+        mock_scale_empty.return_value = False
+        temperature_is_rising_or_constant = True
+        result = teapot_status.get_teapot_status(
+            10, 10, temperature_is_rising_or_constant)
+        self.assertEqual(result.teapot_state, TeapotStatuses.GOOD_TEAPOT)
+
+        # New teapot made
+        mock_is_full.return_value = True
+        mock_is_cold.return_value = False
+        mock_teapot_empty.return_value = False
+        mock_scale_empty.return_value = False
+        temperature_is_rising_or_constant = True
+        result = teapot_status.get_teapot_status(
+            10, 10, temperature_is_rising_or_constant)
+        self.assertEqual(result.teapot_state, TeapotStatuses.FULL_TEAPOT)
 
 if __name__ == '__main__':
     main()
