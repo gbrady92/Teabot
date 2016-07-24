@@ -22,7 +22,7 @@ class TestServerCommunicator(TestCase):
         server_communicator = ServerCommunicator()
         send_time = datetime.now()
         server_communicator.send_status_update(
-            TeapotStatuses.FULL_TEAPOT, send_time, 5
+            TeapotStatuses.FULL_TEAPOT, send_time, 5, 200, 70
         )
         mock_queue.assert_called_once_with(server_communicator)
         mock_post.assert_called_once_with(
@@ -30,7 +30,9 @@ class TestServerCommunicator(TestCase):
             data=json.dumps({
                 "state": TeapotStatuses.FULL_TEAPOT,
                 "timestamp": send_time.isoformat(),
-                "num_of_cups": 5
+                "num_of_cups": 5,
+                "weight": 200,
+                "temperature": 70
             })
         )
 
@@ -47,7 +49,7 @@ class TestServerCommunicator(TestCase):
         server_communicator = ServerCommunicator()
         send_time = datetime.now()
         server_communicator.send_status_update(
-            TeapotStatuses.GOOD_TEAPOT, send_time, 5
+            TeapotStatuses.GOOD_TEAPOT, send_time, 5, 200, 70
         )
         self.assertFalse(mock_queue.call_count)
         mock_post.assert_called_once_with(
@@ -55,7 +57,9 @@ class TestServerCommunicator(TestCase):
             data=json.dumps({
                 "state": TeapotStatuses.GOOD_TEAPOT,
                 "timestamp": send_time.isoformat(),
-                "num_of_cups": 5
+                "num_of_cups": 5,
+                "weight": 200,
+                "temperature": 70
             })
         )
 
@@ -75,7 +79,7 @@ class TestServerCommunicator(TestCase):
         ])
         server_communicator = ServerCommunicator()
         server_communicator.send_status_update(
-            TeapotStatuses.FULL_TEAPOT, datetime.now(), 5
+            TeapotStatuses.FULL_TEAPOT, datetime.now(), 5, 200, 70
         )
         result = server_communicator.send_queued_update_if_time()
         self.assertEqual(mock_post.call_count, 1)
@@ -102,7 +106,7 @@ class TestServerCommunicator(TestCase):
         ])
         server_communicator = ServerCommunicator()
         server_communicator.send_status_update(
-            TeapotStatuses.FULL_TEAPOT, datetime.now(), 5
+            TeapotStatuses.FULL_TEAPOT, datetime.now(), 5, 200, 70
         )
         result = server_communicator.send_queued_update_if_time()
         self.assertEqual(mock_post.call_count, 2)

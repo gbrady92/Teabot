@@ -42,7 +42,9 @@ def do_work():
         server_link.send_status_update(
             status.teapot_state,
             status.timestamp,
-            status.number_of_cups_remaining
+            status.number_of_cups_remaining,
+            current_weight,
+            temperature
         )
         print status.teapot_state
         print status.number_of_cups_remaining
