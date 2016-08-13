@@ -1,7 +1,7 @@
 from __future__ import division
 from collections import namedtuple
 from datetime import datetime
-from constants import Constants, Transistions
+from constants import Constants
 from teapot_state import get_teapot_state_machine
 
 
@@ -186,31 +186,23 @@ class TeapotStatus(object):
             new_status = state_machine.current
         elif teapot_temperature_is_rising_or_constant and teapot_full:
             if self.new_teapot_is_not_duplicate():
-                getattr(
-                    state_machine,
-                    Transistions.TEMP_RISING_WEIGHT_ABOVE_FULL)()
+                state_machine.temp_rising_weight_above_full()
             else:
                 # This makes the teapot state be GOOD_TEAPOT and we don't
                 # have to worry about duplicate new teapot alerts
-                getattr(
-                    state_machine,
-                    Transistions.WEIGHT_ABOVE_EMPTY_BELOW_FULL)()
+                state_machine.weight_above_empty_below_full()
             new_status = state_machine.current
         elif not teapot_empty and not teapot_full and not teapot_cold:
-            getattr(
-                state_machine, Transistions.WEIGHT_ABOVE_EMPTY_BELOW_FULL)()
+            state_machine.weight_above_empty_below_full()
             new_status = state_machine.current
         elif teapot_cold and not teapot_empty:
-            getattr(
-                state_machine,
-                Transistions.TEMP_BELOW_COLD_AND_WEIGHT_ABOVE_EMPTY
-            )()
+            state_machine.temp_below_cold_weight_above_empty()
             new_status = state_machine.current
         elif teapot_cold and not teapot_empty:
-            getattr(state_machine, Transistions.TEMP_BELOW_COLD)()
+            state_machine.temp_below_cold()
             new_status = state_machine.current
         elif teapot_empty:
-            getattr(state_machine, Transistions.WEIGHT_BELOW_EMPTY)()
+            state_machine.weight_below_empty()
             new_status = state_machine.current
         else:
             raise Exception("None of the expected conditions were satisfied")
