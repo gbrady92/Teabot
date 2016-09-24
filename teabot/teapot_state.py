@@ -111,6 +111,11 @@ def generate_teapot_state_machine():
                 'dst': TeapotStatuses.COLD_TEAPOT
             },
             {
+                'name': Transistions.WEIGHT_ABOVE_EMPTY_BELOW_FULL,
+                'src': TeapotStatuses.COLD_TEAPOT,
+                'dst': TeapotStatuses.COLD_TEAPOT
+            },
+            {
                 'name': Transistions.TEMP_RISING_WEIGHT_ABOVE_FULL,
                 'src': TeapotStatuses.EMPTY_TEAPOT,
                 'dst': TeapotStatuses.FULL_TEAPOT

@@ -275,5 +275,15 @@ class TestTeapotState(TestCase):
             TeapotStatuses.COLD_TEAPOT
         )
 
+        state_machine = self._get_state_machine_at_cold_teapot()
+        self.assertEqual(state_machine.current, TeapotStatuses.COLD_TEAPOT)
+
+        # Cold pot fluctuates been being cold and not
+        state_machine.weight_above_empty_below_full()
+        self.assertEqual(
+            state_machine.current,
+            TeapotStatuses.COLD_TEAPOT
+        )
+
 if __name__ == '__main__':
     main()
