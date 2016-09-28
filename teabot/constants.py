@@ -93,5 +93,5 @@ class Constants(object):
     def get_new_teapot_refresh_period(self):
         if not self.NEW_TEAPOT_REFRESH_PERIOD:
             # TODO Replace with actual database lookup
-            self.NEW_TEAPOT_REFRESH_PERIOD = timedelta(minutes=20)
+            self.NEW_TEAPOT_REFRESH_PERIOD = timedelta(minutes=40)
         return self.NEW_TEAPOT_REFRESH_PERIOD
