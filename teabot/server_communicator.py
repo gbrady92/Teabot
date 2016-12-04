@@ -71,3 +71,17 @@ class ServerCommunicator(object):
         )
         self.next_send_time = None
         return True
+
+    def send_flip_teapot_request(self, dash_mac_address):
+        """Calls endpoint to flip teapot request if dash button click is detected
+
+        Args:
+            dash_mac_address - str - Dash button mac dash_mac_address
+
+        Returns:
+            None
+        """
+
+        requests.post(
+            self.constants.get_endpoint_base_url() + "flipTeapotRequest",
+            data=json.dumps({"dash_mac_address": dash_mac_address}))
