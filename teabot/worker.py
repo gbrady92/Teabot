@@ -33,8 +33,8 @@ def do_work():
     server_link.send_queued_update_if_time()
     global last_status, last_number_of_cups
 
-    current_weight = weight_sensor.get_readings(wait=True)[-1]['reading']
-    temperature = temperature_sensor.get_readings()[-1]['reading']
+    current_weight = weight_sensor.read_and_store(wait=True)
+    temperature = temperature_sensor.read_and_store(wait=True)
     temperature_is_rising_or_constant = \
         temperature_sensor.is_rising_or_constant()
 

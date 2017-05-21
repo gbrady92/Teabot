@@ -27,7 +27,7 @@ class Temperature(BaseSensor):
         return lines
 
     # Convert the value of the sensor into a temperature
-    def get_reading(self):
+    def read_sensor(self):
         lines = self.read_temp_raw()  # Read the temperature 'device file'
 
         # While the first line does not contain 'YES', wait for 0.2s

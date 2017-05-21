@@ -22,25 +22,45 @@ class BaseSensor(object):
             print "pruning readings", i, self.recent_readings
             self.recent_readings = self.recent_readings[first_valid_index:]
 
-    def get_reading(self):
+    def read_sensor(self):
         raise NotImplementedError(
-            "Please implement get_reading() for %s." % self.__class__)
+            "Please implement read_sensor() for %s." % self.__class__)
 
-    def get_readings(self, from_dt=None, to_dt=None, wait=False):
-        """Update recent_readings; Get readings between from_dt and to_dt."""
+    def read_and_store(self, wait=True):
+        """Get a reading from the sensor.
+
+        Will block if we already have a reading that's more recent than
+        self.POLL_PERIOD.
+        """
         now = datetime.utcnow()
 
-        if not self.recent_readings \
+        if not wait or not self.recent_readings \
                 or self.recent_readings[-1]['ts'] < now - self.POLL_PERIOD:
-            reading = self.get_reading()
+
+            reading = self.read_sensor()
             self.recent_readings.append({'ts': now, 'reading': reading})
             self.prune_readings()
-        elif wait:
+            return reading
+        else:
             pause = self.recent_readings[-1]['ts'] + self.POLL_PERIOD - now
             time.sleep(pause.total_seconds())
             # recurse once
-            return self.get_readings(from_dt, to_dt)
+            return self.read_and_store(wait=False)
 
+    def get_latest_reading(self):
+        return self.recent_readings[-1]['reading']
+
+    def get_readings(self, from_dt=None, to_dt=None):
+        """Get readings between from_dt and to_dt.
+
+        :param from_dt datetime or None:
+            The earliest timestamp to return.
+        :param from_dt datetime or None:
+            The latest timestamp to return.
+
+        :return list[dict[ts: datetime, reading: float]]:
+            The readings.
+        """
         if from_dt is None and to_dt is None:
             return self.recent_readings
 
@@ -65,13 +85,10 @@ class BaseSensor(object):
             Boolean - True if the majority of the 10 readings obtained are
             increasing or the same
         """
-        set_of_readings = []
-        wait = False
-        while len(set_of_readings) < 10:
-            set_of_readings = [
-                r['reading'] for r in self.get_readings(wait=wait)[-10:]]
-            # if we need to go around the loop to get more, wait for them.
-            wait = True
+        while len(self.recent_readings) < 10:
+            self.read_and_store(wait=True)
+
+        set_of_readings = [r['reading'] for r in self.recent_readings[-10:]]
 
         number_rising = 0
         number_falling = 0

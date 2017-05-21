@@ -30,7 +30,7 @@ class Weight(BaseSensor):
         """
         return max(list_of_readings, key=list_of_readings.count)
 
-    def get_reading(self):
+    def read_sensor(self):
         """Returns the weight of the item on the scales in grams, testing has
         found that old values may be returned from the scales so multiple
         readings are taken and the most common is returned.

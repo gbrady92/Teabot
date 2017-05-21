@@ -16,6 +16,6 @@ class FakeSensor(BaseSensor):
     def __str__(self):
         return "FakeSensor(%s)" % self.key
 
-    def get_reading(self):
+    def read_sensor(self):
         line = self.pipe.readline()
         return json.loads(line)[self.key]
