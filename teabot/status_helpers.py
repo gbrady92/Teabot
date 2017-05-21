@@ -124,7 +124,9 @@ class TeapotStatus(object):
         return int(round(tea_weight / weight_of_tea_in_cup))
 
     def get_current_time(self):
-        """Wrapper around datetime.utcnow() so that we can mock it in testing"""
+        """
+        Wrapper around datetime.utcnow() so that we can mock it out in testing.
+        """
         return datetime.utcnow()
 
     def new_teapot_is_not_duplicate(self):
