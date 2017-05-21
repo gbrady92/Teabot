@@ -51,8 +51,8 @@ class ServerCommunicator(object):
             timedelta(minutes=self.constants.get_brew_delay_minutes())
 
     def _get_current_time(self):
-        """Wrapper for datetime.now() as it can't be mocked in testing"""
-        return datetime.now()
+        """Wrapper for datetime.utcnow() as it can't be mocked in testing"""
+        return datetime.utcnow()
 
     def send_queued_update_if_time(self):
         """Sends an alert that a new teapot has brewed if it is time. This

@@ -11,7 +11,7 @@ class BaseSensor(object):
         self.recent_readings = []
 
     def prune_readings(self):
-        oldest_allowed = datetime.now() - self.MAX_AGE
+        oldest_allowed = datetime.utcnow() - self.MAX_AGE
         first_valid_index = None
         for i, reading in enumerate(self.recent_readings):
             if reading['ts'] >= oldest_allowed:
@@ -28,7 +28,7 @@ class BaseSensor(object):
 
     def get_readings(self, from_dt=None, to_dt=None, wait=False):
         """Update recent_readings; Get readings between from_dt and to_dt."""
-        now = datetime.now()
+        now = datetime.utcnow()
 
         if not self.recent_readings \
                 or self.recent_readings[-1]['ts'] < now - self.POLL_PERIOD:
