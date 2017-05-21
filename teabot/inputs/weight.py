@@ -1,14 +1,17 @@
 import usb.core
 import usb.util
 
+from teabot.inputs.base import BaseSensor
+
 VENDOR_ID = 0x0922
 PRODUCT_ID = 0x8006
 
 
-class Weight(object):
+class Weight(BaseSensor):
     """Controls interactions with the scales"""
 
     def __init__(self):
+        super(Weight, self).__init__()
         self.device = usb.core.find(idVendor=VENDOR_ID, idProduct=PRODUCT_ID)
 
         if self.device.is_kernel_driver_active(0):

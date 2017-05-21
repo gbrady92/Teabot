@@ -1,3 +1,4 @@
+from os import environ
 from datetime import timedelta
 
 
@@ -79,8 +80,8 @@ class Constants(object):
 
     def get_endpoint_base_url(self):
         if not self.ENDPOINT_BASE_URL:
-            # TODO Replace with actual database lookup
-            self.ENDPOINT_BASE_URL = "https://teabot.co.uk/"
+            self.ENDPOINT_BASE_URL = environ.get(
+                "TEABOT_BASE_URL", "https://teabot.co.uk/")
         return self.ENDPOINT_BASE_URL
 
     def get_weight_of_tea_in_full_teapot(self):

@@ -1,13 +1,15 @@
 import os
 import glob
 import time
-from itertools import tee
+
+from teabot.inputs.base import BaseSensor
 
 
-class Temperature(object):
+class Temperature(BaseSensor):
     """Controls interactions with the Temperature sensor"""
 
     def __init__(self):
+        super(Temperature, self).__init__()
         # Initialize the GPIO Pins
         os.system('modprobe w1-gpio')  # Turns on the GPIO module
         os.system('modprobe w1-therm')  # Turns on the Temperature module
@@ -42,35 +44,3 @@ class Temperature(object):
             temp_string = lines[1][equals_pos + 2:]
             temp_c = float(temp_string) / 1000.0
             return temp_c
-
-    def is_rising_or_constant(self):
-        """Used to determine if the temperature being read is increasing or
-        constant. By polling the sensor 10 times and analysing the output
-
-        Returns:
-            Boolean - True if the majority of the 10 readings obtained are
-            increasing or the same
-        """
-        set_of_readings = [self.get_reading() for _ in range(0, 10)]
-        number_rising = 0
-        number_falling = 0
-        for x, y in self.pairwise(set_of_readings):
-            if y >= x:
-                number_rising += 1
-            else:
-                number_falling += 1
-        if number_rising > number_falling:
-            return True
-        return False
-
-    def pairwise(self, iterable):
-        """From the itertools recipes takes an iterable and returns overlapping
-        pairs e.g.
-            s -> (s0,s1), (s1,s2), (s2, s3), ...
-
-        Returns:
-            Iterable
-        """
-        a, b = tee(iterable)
-        next(b, None)
-        return zip(a, b)
