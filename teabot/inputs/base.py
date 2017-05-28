@@ -19,7 +19,6 @@ class BaseSensor(object):
                 break
 
         if first_valid_index:
-            print "pruning readings", i, self.recent_readings
             self.recent_readings = self.recent_readings[first_valid_index:]
 
     def read_sensor(self):
