@@ -1,3 +1,13 @@
 #!/bin/sh
 
-exec sudo python teabot/worker.py
+cd `dirname $0`
+
+if echo $* | grep -q -- --fake
+then
+    cat teabot/tests/fixtures/empty_then_pot.input \
+        | TEABOT_BASE_URL="https://teabot-alsuren.herokuapp.com/" \
+            python -u teabot/worker.py --fake
+    exit 0
+fi
+
+exec sudo python -u teabot/worker.py
