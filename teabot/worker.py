@@ -1,12 +1,20 @@
-from inputs.weight import Weight
-from inputs.temperature import Temperature
+import sys
 from status_helpers import TeapotStatus
 from server_communicator import ServerCommunicator
 from constants import TeapotStatuses
 import rollbar
 
-weight_sensor = Weight()
-temperature_sensor = Temperature()
+
+if '--fake' in sys.argv:
+    from inputs.fake import FakeSensor
+    weight_sensor = FakeSensor(key='weight', pipe=sys.stdin)
+    temperature_sensor = FakeSensor(key='temperature', pipe=sys.stdin)
+else:
+    from inputs.weight import Weight
+    from inputs.temperature import Temperature
+    weight_sensor = Weight()
+    temperature_sensor = Temperature()
+
 server_link = ServerCommunicator()
 teapot_status = TeapotStatus()
 last_status = None
@@ -25,8 +33,8 @@ def do_work():
     server_link.send_queued_update_if_time()
     global last_status, last_number_of_cups
 
-    current_weight = weight_sensor.get_reading()
-    temperature = temperature_sensor.get_reading()
+    current_weight = weight_sensor.read_and_store(wait=True)
+    temperature = temperature_sensor.read_and_store(wait=True)
     temperature_is_rising_or_constant = \
         temperature_sensor.is_rising_or_constant()
 

@@ -35,7 +35,7 @@ class TeapotStatus(object):
         )
         return teapot_state(
             teapot_state=teapot_status,
-            timestamp=datetime.now(),
+            timestamp=datetime.utcnow(),
             number_of_cups_remaining=number_of_cups_remaining
         )
 
@@ -124,8 +124,10 @@ class TeapotStatus(object):
         return int(round(tea_weight / weight_of_tea_in_cup))
 
     def get_current_time(self):
-        """Wrapper around datetime.now() so that we can mock it in testing"""
-        return datetime.now()
+        """
+        Wrapper around datetime.utcnow() so that we can mock it out in testing.
+        """
+        return datetime.utcnow()
 
     def new_teapot_is_not_duplicate(self):
         """Determines if enough time has passed since the last full teapot that

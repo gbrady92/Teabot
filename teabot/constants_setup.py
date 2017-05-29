@@ -9,7 +9,7 @@ stored_data_dict = dict()
 
 
 def store_reading(key):
-    stored_data_dict[key] = weight_sensor.get_reading()
+    stored_data_dict[key] = weight_sensor.read_sensor()
 
 print (raw_input('Place empty teapot on scale and press enter.'))
 

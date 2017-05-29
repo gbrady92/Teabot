@@ -20,7 +20,7 @@ class TestServerCommunicator(TestCase):
             get_endpoint_base_url=Mock(return_value="abc/")
         )
         server_communicator = ServerCommunicator()
-        send_time = datetime.now()
+        send_time = datetime.utcnow()
         server_communicator.send_status_update(
             TeapotStatuses.FULL_TEAPOT, send_time, 5, 200, 70
         )
@@ -47,7 +47,7 @@ class TestServerCommunicator(TestCase):
             get_endpoint_base_url=Mock(return_value="abc/")
         )
         server_communicator = ServerCommunicator()
-        send_time = datetime.now()
+        send_time = datetime.utcnow()
         server_communicator.send_status_update(
             TeapotStatuses.GOOD_TEAPOT, send_time, 5, 200, 70
         )
@@ -79,7 +79,7 @@ class TestServerCommunicator(TestCase):
         ])
         server_communicator = ServerCommunicator()
         server_communicator.send_status_update(
-            TeapotStatuses.FULL_TEAPOT, datetime.now(), 5, 200, 70
+            TeapotStatuses.FULL_TEAPOT, datetime.utcnow(), 5, 200, 70
         )
         result = server_communicator.send_queued_update_if_time()
         self.assertEqual(mock_post.call_count, 1)
@@ -106,7 +106,7 @@ class TestServerCommunicator(TestCase):
         ])
         server_communicator = ServerCommunicator()
         server_communicator.send_status_update(
-            TeapotStatuses.FULL_TEAPOT, datetime.now(), 5, 200, 70
+            TeapotStatuses.FULL_TEAPOT, datetime.utcnow(), 5, 200, 70
         )
         result = server_communicator.send_queued_update_if_time()
         self.assertEqual(mock_post.call_count, 2)
