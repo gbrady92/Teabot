@@ -1,0 +1,12 @@
+[Unit]
+Description=Teabot - tea reporting daemon.
+After=network.target
+
+[Service]
+Type=simple
+User=root
+ExecStart={{PWD}}/run {{ARGS}}
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
