@@ -12,21 +12,6 @@ class TeapotStatuses(object):
     FULL_TEAPOT = "FULL_TEAPOT"
 
 
-class Transistions(object):
-    """Defines the states the environment can be in and therefore valid
-    transistions between states in the state machine
-    """
-
-    TEMP_RISING_WEIGHT_ABOVE_FULL = "temp_rising_weight_above_full"
-    TEMP_BELOW_COLD = "temp_below_cold"
-    WEIGHT_BELOW_EMPTY = "weight_below_empty"
-    TEMP_BELOW_COLD_AND_WEIGHT_ABOVE_EMPTY = \
-        'temp_below_cold_weight_above_empty'
-    WEIGHT_ABOVE_EMPTY_BELOW_FULL = \
-        'weight_above_empty_below_full'
-    SCALES_EMPTY = 'scales_empty'
-
-
 class Constants(object):
     """Defines environmental constants that influence the state of the
     teapot
