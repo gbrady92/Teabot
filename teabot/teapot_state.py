@@ -2,9 +2,57 @@ from fysom import Fysom
 from teabot.constants import (
     NO_TEAPOT, FULL_TEAPOT, GOOD_TEAPOT, COLD_TEAPOT, EMPTY_TEAPOT,
 )
+from teabot.server_communicator import ServerCommunicator
 
 # Cached teapot_state_machine, retrive it using get_teapot_state_machine
 teapot_state_machine = None
+
+last_number_of_cups = None
+server_link = ServerCommunicator()
+
+
+def handle_state_change_event(event):
+    global last_number_of_cups
+
+    if event.src == 'none':
+        return True
+
+    if event.number_of_cups_remaining <= 0 and event.dst != EMPTY_TEAPOT:
+        return True
+
+    server_link.send_queued_update_if_time()
+
+    server_link.send_status_update(
+        event.dst,
+        event.timestamp,
+        event.number_of_cups_remaining,
+        event.weight,
+        event.temperature
+    )
+    last_number_of_cups = event.number_of_cups_remaining
+    return True
+
+
+def handle_state_reenter_event(event):
+    global last_number_of_cups
+
+    if event.number_of_cups_remaining <= 0 and event.dst != EMPTY_TEAPOT:
+        return True
+
+    server_link.send_queued_update_if_time()
+
+    if event.number_of_cups_remaining != last_number_of_cups:
+        server_link.send_status_update(
+            event.dst,
+            event.timestamp,
+            event.number_of_cups_remaining,
+            event.weight,
+            event.temperature
+        )
+    else:
+        print "status hasn't changed"
+    last_number_of_cups = event.number_of_cups_remaining
+    return True
 
 
 def generate_teapot_state_machine():
@@ -137,7 +185,11 @@ def generate_teapot_state_machine():
                 'src': EMPTY_TEAPOT,
                 'dst': GOOD_TEAPOT
             }
-        ]
+        ],
+        'callbacks': {
+            'onchangestate': handle_state_change_event,
+            'onreenter': handle_state_reenter_event,
+        }
     })
     return fsm
 

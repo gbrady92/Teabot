@@ -167,6 +167,8 @@ class TeapotStatus(object):
         teapot_cold = self.teapot_is_cold(teapot_temperature)
         teapot_empty = self.teapot_is_empty(teapot_weight)
         scale_empty = self.scale_is_empty(teapot_weight)
+        number_of_cups = self.calculate_number_of_cups_remaining(teapot_weight)
+        timestamp = datetime.utcnow()
 
         print "###############"
         print "teapot full", teapot_full
@@ -188,26 +190,49 @@ class TeapotStatus(object):
             new_status = state_machine.current
         elif teapot_temperature_is_rising_or_constant and teapot_full:
             if self.new_teapot_is_not_duplicate():
-                state_machine.temp_rising_weight_above_full()
+                state_machine.temp_rising_weight_above_full(
+                    timestamp=timestamp,
+                    weight=teapot_weight,
+                    temperature=teapot_temperature,
+                    number_of_cups_remaining=number_of_cups)
             else:
                 # This makes the teapot state be GOOD_TEAPOT and we don't
                 # have to worry about duplicate new teapot alerts
-                state_machine.weight_above_empty_below_full()
+                state_machine.weight_above_empty_below_full(
+                    timestamp=timestamp,
+                    weight=teapot_weight,
+                    temperature=teapot_temperature,
+                    number_of_cups_remaining=number_of_cups)
             new_status = state_machine.current
         elif not teapot_empty and not teapot_full and not teapot_cold:
-            state_machine.weight_above_empty_below_full()
+            state_machine.weight_above_empty_below_full(
+                timestamp=timestamp,
+                weight=teapot_weight,
+                temperature=teapot_temperature,
+                number_of_cups_remaining=number_of_cups)
             new_status = state_machine.current
         elif teapot_cold and not teapot_empty:
-            state_machine.temp_below_cold_weight_above_empty()
+            state_machine.temp_below_cold_weight_above_empty(
+                timestamp=timestamp,
+                weight=teapot_weight,
+                temperature=teapot_temperature,
+                number_of_cups_remaining=number_of_cups)
             new_status = state_machine.current
         elif teapot_cold and not teapot_empty:
-            state_machine.temp_below_cold()
+            state_machine.temp_below_cold(
+                timestamp=timestamp,
+                weight=teapot_weight,
+                temperature=teapot_temperature,
+                number_of_cups_remaining=number_of_cups)
             new_status = state_machine.current
         elif teapot_empty:
-            state_machine.weight_below_empty()
+            state_machine.weight_below_empty(
+                timestamp=timestamp,
+                weight=teapot_weight,
+                temperature=teapot_temperature,
+                number_of_cups_remaining=number_of_cups)
             new_status = state_machine.current
         else:
             raise Exception("None of the expected conditions were satisfied")
 
-        number_of_cups = self.calculate_number_of_cups_remaining(teapot_weight)
         return self.get_teapot_descriptor(new_status, number_of_cups)
