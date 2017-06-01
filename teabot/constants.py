@@ -1,15 +1,29 @@
 from os import environ
 from datetime import timedelta
 
+NO_TEAPOT = "NO_TEAPOT"
+FULL_TEAPOT = "FULL_TEAPOT"
+GOOD_TEAPOT = "GOOD_TEAPOT"
+COLD_TEAPOT = "COLD_TEAPOT"
+EMPTY_TEAPOT = "EMPTY_TEAPOT"
+
 
 class TeapotStatuses(object):
     """Defines the states the teapot can be in"""
 
-    GOOD_TEAPOT = "GOOD_TEAPOT"
-    COLD_TEAPOT = "COLD_TEAPOT"
-    NO_TEAPOT = "NO_TEAPOT"
-    EMPTY_TEAPOT = "EMPTY_TEAPOT"
-    FULL_TEAPOT = "FULL_TEAPOT"
+    """We have only seen empty scales since we started, so we have no info."""
+    NO_TEAPOT = NO_TEAPOT
+    """Transitioning to this state causes a POST to /teaReady in 5 mins."""
+    FULL_TEAPOT = FULL_TEAPOT
+    """A teapot that we don't want to notify about."""
+    GOOD_TEAPOT = GOOD_TEAPOT
+    """A pot with tea in that is cold."""
+    COLD_TEAPOT = COLD_TEAPOT
+    """A pot with no tea in.
+    Note that if the scales are empty, we try to keep the state as it was, but
+    it's entirely possible that it might slip into this state?
+    """
+    EMPTY_TEAPOT = EMPTY_TEAPOT
 
 
 class Constants(object):
