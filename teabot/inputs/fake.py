@@ -1,6 +1,6 @@
 import json
 
-from inputs.base import BaseSensor
+from teapot.inputs.base import BaseSensor
 
 
 class FakeSensor(BaseSensor):

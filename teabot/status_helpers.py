@@ -1,8 +1,8 @@
 from __future__ import division
 from collections import namedtuple
 from datetime import datetime
-from constants import Constants
-from teapot_state import get_teapot_state_machine
+from teabot.constants import Constants
+from teabot.teapot_state import get_teapot_state_machine
 
 
 class TeapotStatus(object):

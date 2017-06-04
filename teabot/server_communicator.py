@@ -1,5 +1,5 @@
 import requests
-from constants import TeapotStatuses, Constants
+from teabot.constants import TeapotStatuses, Constants
 from datetime import datetime, timedelta
 import json
 
