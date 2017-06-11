@@ -1,17 +1,17 @@
 import sys
-from status_helpers import TeapotStatus
-from server_communicator import ServerCommunicator
-from constants import TeapotStatuses
+from teabot.status_helpers import TeapotStatus
+from teabot.server_communicator import ServerCommunicator
+from teabot.constants import TeapotStatuses
 import rollbar
 
 
 if '--fake' in sys.argv:
-    from inputs.fake import FakeSensor
+    from teabot.inputs.fake import FakeSensor
     weight_sensor = FakeSensor(key='weight', pipe=sys.stdin)
     temperature_sensor = FakeSensor(key='temperature', pipe=sys.stdin)
 else:
-    from inputs.weight import Weight
-    from inputs.temperature import Temperature
+    from teabot.inputs.weight import Weight
+    from teabot.inputs.temperature import Temperature
     weight_sensor = Weight()
     temperature_sensor = Temperature()
 

@@ -11,6 +11,13 @@ cd `dirname $0`
 
 sudo pip install -r requirements.txt
 
+if echo $* | grep -q -- --constants
+then
+    sudo env PYTHONPATH=$PWD python teabot/constants_setup.py
+    echo "Please copy these values into teabot.contants.Constants then re-run."
+    exit 0
+fi
+
 if [ -f teabot.service ]
 then
     echo "Please delete teabot.service file before continuing."

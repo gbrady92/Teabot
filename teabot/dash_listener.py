@@ -1,7 +1,7 @@
 from scapy.all import sniff, ARP
 from expiringdict import ExpiringDict
 
-from server_communicator import ServerCommunicator
+from teabot.server_communicator import ServerCommunicator
 
 server_link = ServerCommunicator()
 
