@@ -1,7 +1,6 @@
 from datetime import datetime
 from unittest import TestCase
 from unittest import main
-from mock import Mock, patch
 from teabot.teapot_state import generate_teapot_state_machine, \
     get_teapot_state_machine
 from teabot.constants import TeapotStatuses
