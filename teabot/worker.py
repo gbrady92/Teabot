@@ -21,6 +21,51 @@ teapot_status = TeapotStatus()
 rollbar.init("")
 
 
+def dump_sensors():
+    weight_readings = weight_sensor.get_readings()
+    temperature_readings = temperature_sensor.get_readings()
+    min_ts = min(weight_readings[0]['ts'], temperature_readings[0]['ts'])
+    max_ts = max(weight_readings[-1]['ts'], temperature_readings[-1]['ts'])
+
+    filename = max_ts.isoformat() + '.input'
+    print "saving input to", filename
+
+    with open(filename, 'w') as dumpfile:
+        dumpfile.write(
+            '{"weight": null, "temperature": null, "offset_seconds": -%s}\n'
+            % (max_ts - min_ts).total_seconds())
+
+        last_ts = min_ts
+        while weight_readings and temperature_readings:
+            wi = weight_readings[0]
+            ti = temperature_readings[0]
+
+            if wi['ts'] < ti['ts']:
+                now = weight_readings.pop(0)['ts']
+            else:
+                now = temperature_readings.pop(0)['ts']
+
+            if (now - last_ts).total_seconds() > 0.5:
+                dumpfile.write(
+                    '{"weight": %s, "temperature": %s, "offset_seconds": %s}\n'
+                    % (
+                        wi['reading'],
+                        ti['reading'],
+                        (now - last_ts).total_seconds()),
+                )
+                last_ts = now
+
+        for wi in weight_readings:
+            dumpfile.write(
+                '{"weight": %s, "temperature": %s, "extra": "weight"}'
+                % (wi['reading'], ti['reading']))
+
+        for ti in temperature_readings:
+            dumpfile.write(
+                '{"weight": %s, "temperature": %s, "extra": "temperature"}'
+                % (wi['reading'], ti['reading']))
+
+
 def do_work():
     """This is the entry point for teabot, this function polls the sensors for
     their lastest readings and then updates the state machine based on them.
@@ -47,4 +92,7 @@ if __name__ == "__main__":
             do_work()
         except Exception as e:
             rollbar.report_exc_info()
+            raise
+        except KeyboardInterrupt:
+            dump_sensors()
             raise
