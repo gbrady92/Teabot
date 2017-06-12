@@ -15,6 +15,9 @@ class TeapotStatus(object):
         # Initially set to the oldest value possible so the first full teapot
         # is always full
         self.last_full_teapot_time = datetime.min
+        # The end ts of the last 2-minute period where there was no teapot on
+        # the stand.
+        self.last_preparation_period = datetime.min
 
     def get_teapot_descriptor(self, teapot_status, number_of_cups_remaining):
         """Returns a named tuple representing the status of the teapot,
@@ -148,7 +151,8 @@ class TeapotStatus(object):
 
     def get_teapot_status(
             self, teapot_weight, teapot_temperature,
-            teapot_temperature_is_rising_or_constant):
+            teapot_temperature_is_rising_or_constant,
+            last_preparation_period):
         """Determines the current status of the teapot using a finite state
         machine to transform the previous state of the teapot to the new state
         based on the readings from the sensors.
@@ -189,7 +193,8 @@ class TeapotStatus(object):
         if scale_empty:
             new_status = state_machine.current
         elif teapot_temperature_is_rising_or_constant and teapot_full:
-            if self.new_teapot_is_not_duplicate():
+            if last_preparation_period > self.last_preparation_period:
+                self.last_preparation_period = last_preparation_period
                 state_machine.temp_rising_weight_above_full(
                     timestamp=timestamp,
                     weight=teapot_weight,

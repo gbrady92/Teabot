@@ -77,6 +77,19 @@ class BaseSensor(object):
 
         return self.recent_readings[first_index:last_index]
 
+    def last_period_matching(self, condition, duration):
+        end_ts = datetime.min
+        for reading in self.recent_readings[::-1]:
+            if condition(reading['reading']):
+                if end_ts == datetime.min:
+                    end_ts = reading['ts']
+                elif end_ts - reading['ts'] >= duration:
+                    return end_ts
+            else:
+                end_ts = datetime.min
+
+        return datetime.min
+
     def is_rising_or_constant(self):
         """Used to determine if the sensor being read is increasing or
         constant. By polling the sensor 10 times and analysing the output

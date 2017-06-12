@@ -1,4 +1,5 @@
 import sys
+from datetime import timedelta
 
 import rollbar
 
@@ -32,9 +33,12 @@ def do_work():
     temperature = temperature_sensor.read_and_store(wait=True)
     temperature_is_rising_or_constant = \
         temperature_sensor.is_rising_or_constant()
+    last_preparation_period = weight_sensor.last_period_matching(
+        condition=teapot_status.scale_is_empty, duration=timedelta(minutes=2))
 
     teapot_status.get_teapot_status(
-        current_weight, temperature, temperature_is_rising_or_constant)
+        current_weight, temperature, temperature_is_rising_or_constant,
+        last_preparation_period)
 
 
 if __name__ == "__main__":
