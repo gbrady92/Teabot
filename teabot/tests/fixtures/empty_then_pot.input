@@ -1,38 +1,32 @@
-{"weight": 0, "temperature": 20}
-{"weight": 0, "temperature": 20}
-{"weight": 700, "temperature": 90}
-{"weight": 700, "temperature": 90}
-{"weight": 700, "temperature": 90}
-{"weight": 700, "temperature": 90}
-{"weight": 700, "temperature": 90}
-{"weight": 700, "temperature": 90}
-{"weight": 700, "temperature": 90}
-{"weight": 700, "temperature": 90}
-{"weight": 700, "temperature": 90}
-{"weight": 700, "temperature": 90}
-{"weight": 700, "temperature": 90}
-{"weight": 700, "temperature": 90}
-{"weight": 700, "temperature": 90}
-{"weight": 700, "temperature": 90}
-{"weight": 700, "temperature": 90}
-{"weight": 700, "temperature": 90}
-{"weight": 700, "temperature": 90}
-{"weight": 700, "temperature": 90}
-{"weight": 700, "temperature": 90}
-{"weight": 700, "temperature": 90}
-{"weight": 700, "temperature": 90}
-{"weight": 700, "temperature": 90}
-{"weight": 700, "temperature": 90}
-{"weight": 700, "temperature": 90}
-{"weight": 700, "temperature": 90}
-{"weight": 700, "temperature": 90}
-{"weight": 700, "temperature": 90}
-{"weight": 700, "temperature": 90}
-{"weight": 700, "temperature": 90}
-{"weight": 700, "temperature": 90}
-{"weight": 700, "temperature": 90}
-{"weight": 700, "temperature": 90}
-{"weight": 700, "temperature": 90}
-{"weight": 700, "temperature": 90}
-{"weight": 700, "temperature": 90}
-{"weight": 700, "temperature": 90}
+{"weight": null, "temperature": null, "offset_seconds": -30}
+{"weight": 0, "temperature": 20, "offset_seconds": 1}
+{"weight": 700, "temperature": 90, "offset_seconds": 1}
+{"weight": 700, "temperature": 90, "offset_seconds": 1}
+{"weight": 700, "temperature": 90, "offset_seconds": 1}
+{"weight": 700, "temperature": 90, "offset_seconds": 1}
+{"weight": 700, "temperature": 90, "offset_seconds": 1}
+{"weight": 700, "temperature": 90, "offset_seconds": 1}
+{"weight": 700, "temperature": 90, "offset_seconds": 1}
+{"weight": 700, "temperature": 90, "offset_seconds": 1}
+{"weight": 700, "temperature": 90, "offset_seconds": 1}
+{"weight": 700, "temperature": 90, "offset_seconds": 1}
+{"weight": 700, "temperature": 90, "offset_seconds": 1}
+{"weight": 700, "temperature": 90, "offset_seconds": 1}
+{"weight": 700, "temperature": 90, "offset_seconds": 1}
+{"weight": 700, "temperature": 90, "offset_seconds": 1}
+{"weight": 700, "temperature": 90, "offset_seconds": 1}
+{"weight": 700, "temperature": 90, "offset_seconds": 1}
+{"weight": 700, "temperature": 90, "offset_seconds": 1}
+{"weight": 700, "temperature": 90, "offset_seconds": 1}
+{"weight": 700, "temperature": 90, "offset_seconds": 1}
+{"weight": 700, "temperature": 90, "offset_seconds": 1}
+{"weight": 700, "temperature": 90, "offset_seconds": 1}
+{"weight": 700, "temperature": 90, "offset_seconds": 1}
+{"weight": 700, "temperature": 90, "offset_seconds": 1}
+{"weight": 700, "temperature": 90, "offset_seconds": 1}
+{"weight": 700, "temperature": 90, "offset_seconds": 1}
+{"weight": 700, "temperature": 90, "offset_seconds": 1}
+{"weight": 700, "temperature": 90, "offset_seconds": 1}
+{"weight": 700, "temperature": 90, "offset_seconds": 1}
+{"weight": 700, "temperature": 90, "offset_seconds": 1}
+{"weight": 700, "temperature": 80}

@@ -21,6 +21,10 @@ class BaseSensor(object):
         if first_valid_index:
             self.recent_readings = self.recent_readings[first_valid_index:]
 
+    def now(self):
+        """Overridden by FakeSensor to make time go faster."""
+        return datetime.utcnow()
+
     def read_sensor(self):
         raise NotImplementedError(
             "Please implement read_sensor() for %s." % self.__class__)
@@ -31,7 +35,7 @@ class BaseSensor(object):
         Will block if we already have a reading that's more recent than
         self.POLL_PERIOD.
         """
-        now = datetime.utcnow()
+        now = self.now()
 
         if not wait or not self.recent_readings \
                 or self.recent_readings[-1]['ts'] < now - self.POLL_PERIOD:
