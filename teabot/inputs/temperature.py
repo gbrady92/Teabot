@@ -2,7 +2,7 @@ import os
 import glob
 import time
 
-from teabot.inputs.base import BaseSensor
+from inputs.base import BaseSensor
 
 
 class Temperature(BaseSensor):

@@ -1,7 +1,7 @@
 import usb.core
 import usb.util
 
-from teabot.inputs.base import BaseSensor
+from inputs.base import BaseSensor
 
 VENDOR_ID = 0x0922
 PRODUCT_ID = 0x8006
