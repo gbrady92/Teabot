@@ -79,7 +79,7 @@ def do_work():
     temperature_is_rising_or_constant = \
         temperature_sensor.is_rising_or_constant()
     last_preparation_period = weight_sensor.last_period_matching(
-        condition=teapot_status.scale_is_empty, duration=timedelta(minutes=2))
+        condition=teapot_status.scale_is_empty, duration=timedelta(minutes=1))
 
     teapot_status.get_teapot_status(
         current_weight, temperature, temperature_is_rising_or_constant,
