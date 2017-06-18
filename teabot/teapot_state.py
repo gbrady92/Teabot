@@ -188,7 +188,11 @@ def generate_teapot_state_machine():
         ],
         'callbacks': {
             'onchangestate': handle_state_change_event,
-            'onreenter': handle_state_reenter_event,
+            # FULL_TEAPOT should never be reentered but whatever
+            'onreenterFULL_TEAPOT': handle_state_reenter_event,
+            'onreenterGOOD_TEAPOT': handle_state_reenter_event,
+            'onreenterCOLD_TEAPOT': handle_state_reenter_event,
+            'onreenterEMPTY_TEAPOT': handle_state_reenter_event,
         }
     })
     return fsm
