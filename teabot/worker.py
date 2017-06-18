@@ -92,6 +92,7 @@ if __name__ == "__main__":
             do_work()
         except Exception as e:
             rollbar.report_exc_info()
+            dump_sensors()
             raise
         except KeyboardInterrupt:
             dump_sensors()
