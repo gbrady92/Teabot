@@ -11,13 +11,14 @@ def fysom_to_dot(fsm):
     `dot` utility, to produce a graphical representation
     of the finite state machine.
     """
-    lines = ['digraph finite_state_machine {']
+    lines = []
     for event, transitions in fsm._map.items():
         for _from, to in transitions.items():
             lines.append(
-                '\t{_from} -> {to} [ label = "{event}" ]'.format(
+                '\t{_from} -> {to} [ label = " {event}             " ]'.format(
                     _from=_from, to=to, event=event))
-    return '\n'.join(lines) + '\n}\n'
+    lines.sort(key=lambda l: 'FULL_TEAPOT' in l)
+    return 'digraph finite_state_machine {' + '\n'.join(lines) + '\n}\n'
 
 
 def print_finite_state_machine():

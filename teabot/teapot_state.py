@@ -1,8 +1,58 @@
 from fysom import Fysom
-from teabot.constants import TeapotStatuses, Transistions
+from teabot.constants import (
+    NO_TEAPOT, FULL_TEAPOT, GOOD_TEAPOT, COLD_TEAPOT, EMPTY_TEAPOT,
+)
+from teabot.server_communicator import ServerCommunicator
 
 # Cached teapot_state_machine, retrive it using get_teapot_state_machine
 teapot_state_machine = None
+
+last_number_of_cups = None
+server_link = ServerCommunicator()
+
+
+def handle_state_change_event(event):
+    global last_number_of_cups
+
+    if event.src == 'none':
+        return True
+
+    if event.number_of_cups_remaining <= 0 and event.dst != EMPTY_TEAPOT:
+        return True
+
+    server_link.send_queued_update_if_time()
+
+    server_link.send_status_update(
+        event.dst,
+        event.timestamp,
+        event.number_of_cups_remaining,
+        event.weight,
+        event.temperature
+    )
+    last_number_of_cups = event.number_of_cups_remaining
+    return True
+
+
+def handle_state_reenter_event(event):
+    global last_number_of_cups
+
+    if event.number_of_cups_remaining <= 0 and event.dst != EMPTY_TEAPOT:
+        return True
+
+    server_link.send_queued_update_if_time()
+
+    if event.number_of_cups_remaining != last_number_of_cups:
+        server_link.send_status_update(
+            event.dst,
+            event.timestamp,
+            event.number_of_cups_remaining,
+            event.weight,
+            event.temperature
+        )
+    else:
+        print "status hasn't changed"
+    last_number_of_cups = event.number_of_cups_remaining
+    return True
 
 
 def generate_teapot_state_machine():
@@ -13,129 +63,137 @@ def generate_teapot_state_machine():
         - Fysom - finite state machine
     """
     fsm = Fysom({
-        'initial': TeapotStatuses.NO_TEAPOT,
+        'initial': NO_TEAPOT,
         'events': [
             {
-                'name': Transistions.TEMP_RISING_WEIGHT_ABOVE_FULL,
-                'src': TeapotStatuses.NO_TEAPOT,
-                'dst': TeapotStatuses.FULL_TEAPOT
+                'name': 'temp_rising_weight_above_full',
+                'src': NO_TEAPOT,
+                'dst': FULL_TEAPOT
             },
             {
-                'name': Transistions.SCALES_EMPTY,
-                'src': TeapotStatuses.NO_TEAPOT,
-                'dst': TeapotStatuses.NO_TEAPOT
+                'name': 'scales_empty',
+                'src': NO_TEAPOT,
+                'dst': NO_TEAPOT
             },
             {
-                'name': Transistions.WEIGHT_BELOW_EMPTY,
-                'src': TeapotStatuses.NO_TEAPOT,
-                'dst': TeapotStatuses.EMPTY_TEAPOT
+                'name': 'weight_below_empty',
+                'src': NO_TEAPOT,
+                'dst': EMPTY_TEAPOT
             },
             {
-                'name': Transistions.TEMP_BELOW_COLD_AND_WEIGHT_ABOVE_EMPTY,
-                'src': TeapotStatuses.NO_TEAPOT,
-                'dst': TeapotStatuses.COLD_TEAPOT
+                'name': 'temp_below_cold_weight_above_empty',
+                'src': NO_TEAPOT,
+                'dst': COLD_TEAPOT
             },
             {
-                'name': Transistions.WEIGHT_ABOVE_EMPTY_BELOW_FULL,
-                'src': TeapotStatuses.NO_TEAPOT,
-                'dst': TeapotStatuses.GOOD_TEAPOT
+                'name': 'weight_above_empty_below_full',
+                'src': NO_TEAPOT,
+                'dst': GOOD_TEAPOT
             },
             {
-                'name': Transistions.WEIGHT_BELOW_EMPTY,
-                'src': TeapotStatuses.FULL_TEAPOT,
-                'dst': TeapotStatuses.EMPTY_TEAPOT
+                'name': 'weight_below_empty',
+                'src': FULL_TEAPOT,
+                'dst': EMPTY_TEAPOT
             },
             {
-                'name': Transistions.WEIGHT_ABOVE_EMPTY_BELOW_FULL,
-                'src': TeapotStatuses.FULL_TEAPOT,
-                'dst': TeapotStatuses.GOOD_TEAPOT
+                'name': 'weight_above_empty_below_full',
+                'src': FULL_TEAPOT,
+                'dst': GOOD_TEAPOT
             },
             {
-                'name': Transistions.TEMP_BELOW_COLD_AND_WEIGHT_ABOVE_EMPTY,
-                'src': TeapotStatuses.FULL_TEAPOT,
-                'dst': TeapotStatuses.COLD_TEAPOT
+                'name': 'temp_below_cold_weight_above_empty',
+                'src': FULL_TEAPOT,
+                'dst': COLD_TEAPOT
             },
             {
-                'name': Transistions.SCALES_EMPTY,
-                'src': TeapotStatuses.FULL_TEAPOT,
-                'dst': TeapotStatuses.FULL_TEAPOT
+                'name': 'scales_empty',
+                'src': FULL_TEAPOT,
+                'dst': FULL_TEAPOT
             },
             {
-                'name': Transistions.TEMP_RISING_WEIGHT_ABOVE_FULL,
-                'src': TeapotStatuses.FULL_TEAPOT,
-                'dst': TeapotStatuses.FULL_TEAPOT
+                'name': 'temp_rising_weight_above_full',
+                'src': FULL_TEAPOT,
+                'dst': FULL_TEAPOT
             },
             {
-                'name': Transistions.WEIGHT_BELOW_EMPTY,
-                'src': TeapotStatuses.GOOD_TEAPOT,
-                'dst': TeapotStatuses.EMPTY_TEAPOT
+                'name': 'weight_below_empty',
+                'src': GOOD_TEAPOT,
+                'dst': EMPTY_TEAPOT
             },
             {
-                'name': Transistions.WEIGHT_ABOVE_EMPTY_BELOW_FULL,
-                'src': TeapotStatuses.GOOD_TEAPOT,
-                'dst': TeapotStatuses.GOOD_TEAPOT
+                'name': 'weight_above_empty_below_full',
+                'src': GOOD_TEAPOT,
+                'dst': GOOD_TEAPOT
             },
             {
-                'name': Transistions.TEMP_RISING_WEIGHT_ABOVE_FULL,
-                'src': TeapotStatuses.GOOD_TEAPOT,
-                'dst': TeapotStatuses.FULL_TEAPOT
+                'name': 'temp_rising_weight_above_full',
+                'src': GOOD_TEAPOT,
+                'dst': FULL_TEAPOT
             },
             {
-                'name': Transistions.SCALES_EMPTY,
-                'src': TeapotStatuses.GOOD_TEAPOT,
-                'dst': TeapotStatuses.GOOD_TEAPOT
+                'name': 'scales_empty',
+                'src': GOOD_TEAPOT,
+                'dst': GOOD_TEAPOT
             },
             {
-                'name': Transistions.TEMP_BELOW_COLD_AND_WEIGHT_ABOVE_EMPTY,
-                'src': TeapotStatuses.GOOD_TEAPOT,
-                'dst': TeapotStatuses.COLD_TEAPOT
+                'name': 'temp_below_cold_weight_above_empty',
+                'src': GOOD_TEAPOT,
+                'dst': COLD_TEAPOT
             },
             {
-                'name': Transistions.TEMP_RISING_WEIGHT_ABOVE_FULL,
-                'src': TeapotStatuses.COLD_TEAPOT,
-                'dst': TeapotStatuses.FULL_TEAPOT
+                'name': 'temp_rising_weight_above_full',
+                'src': COLD_TEAPOT,
+                'dst': FULL_TEAPOT
             },
             {
-                'name': Transistions.WEIGHT_BELOW_EMPTY,
-                'src': TeapotStatuses.COLD_TEAPOT,
-                'dst': TeapotStatuses.EMPTY_TEAPOT
+                'name': 'weight_below_empty',
+                'src': COLD_TEAPOT,
+                'dst': EMPTY_TEAPOT
             },
             {
-                'name': Transistions.SCALES_EMPTY,
-                'src': TeapotStatuses.COLD_TEAPOT,
-                'dst': TeapotStatuses.COLD_TEAPOT
+                'name': 'scales_empty',
+                'src': COLD_TEAPOT,
+                'dst': COLD_TEAPOT
             },
             {
-                'name': Transistions.TEMP_BELOW_COLD_AND_WEIGHT_ABOVE_EMPTY,
-                'src': TeapotStatuses.COLD_TEAPOT,
-                'dst': TeapotStatuses.COLD_TEAPOT
+                'name': 'temp_below_cold_weight_above_empty',
+                'src': COLD_TEAPOT,
+                'dst': COLD_TEAPOT
             },
             {
-                'name': Transistions.WEIGHT_ABOVE_EMPTY_BELOW_FULL,
-                'src': TeapotStatuses.COLD_TEAPOT,
-                'dst': TeapotStatuses.COLD_TEAPOT
+                'name': 'weight_above_empty_below_full',
+                'src': COLD_TEAPOT,
+                'dst': COLD_TEAPOT
             },
             {
-                'name': Transistions.TEMP_RISING_WEIGHT_ABOVE_FULL,
-                'src': TeapotStatuses.EMPTY_TEAPOT,
-                'dst': TeapotStatuses.FULL_TEAPOT
+                'name': 'temp_rising_weight_above_full',
+                'src': EMPTY_TEAPOT,
+                'dst': FULL_TEAPOT
             },
             {
-                'name': Transistions.WEIGHT_BELOW_EMPTY,
-                'src': TeapotStatuses.EMPTY_TEAPOT,
-                'dst': TeapotStatuses.EMPTY_TEAPOT
+                'name': 'weight_below_empty',
+                'src': EMPTY_TEAPOT,
+                'dst': EMPTY_TEAPOT
             },
             {
-                'name': Transistions.SCALES_EMPTY,
-                'src': TeapotStatuses.EMPTY_TEAPOT,
-                'dst': TeapotStatuses.EMPTY_TEAPOT
+                'name': 'scales_empty',
+                'src': EMPTY_TEAPOT,
+                'dst': EMPTY_TEAPOT
             },
             {
-                'name': Transistions.WEIGHT_ABOVE_EMPTY_BELOW_FULL,
-                'src': TeapotStatuses.EMPTY_TEAPOT,
-                'dst': TeapotStatuses.GOOD_TEAPOT
+                'name': 'weight_above_empty_below_full',
+                'src': EMPTY_TEAPOT,
+                'dst': GOOD_TEAPOT
             }
-        ]
+        ],
+        'callbacks': {
+            'onchangestate': handle_state_change_event,
+            # FULL_TEAPOT should never be reentered but whatever
+            'onreenterFULL_TEAPOT': handle_state_reenter_event,
+            'onreenterGOOD_TEAPOT': handle_state_reenter_event,
+            'onreenterCOLD_TEAPOT': handle_state_reenter_event,
+            'onreenterEMPTY_TEAPOT': handle_state_reenter_event,
+        }
     })
     return fsm
 

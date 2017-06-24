@@ -21,6 +21,10 @@ class BaseSensor(object):
         if first_valid_index:
             self.recent_readings = self.recent_readings[first_valid_index:]
 
+    def now(self):
+        """Overridden by FakeSensor to make time go faster."""
+        return datetime.utcnow()
+
     def read_sensor(self):
         raise NotImplementedError(
             "Please implement read_sensor() for %s." % self.__class__)
@@ -31,7 +35,7 @@ class BaseSensor(object):
         Will block if we already have a reading that's more recent than
         self.POLL_PERIOD.
         """
-        now = datetime.utcnow()
+        now = self.now()
 
         if not wait or not self.recent_readings \
                 or self.recent_readings[-1]['ts'] < now - self.POLL_PERIOD:
@@ -72,6 +76,19 @@ class BaseSensor(object):
                 last_index = i + 1
 
         return self.recent_readings[first_index:last_index]
+
+    def last_period_matching(self, condition, duration):
+        end_ts = datetime.min
+        for reading in self.recent_readings[::-1]:
+            if condition(reading['reading']):
+                if end_ts == datetime.min:
+                    end_ts = reading['ts']
+                elif end_ts - reading['ts'] >= duration:
+                    return end_ts
+            else:
+                end_ts = datetime.min
+
+        return datetime.min
 
     def is_rising_or_constant(self):
         """Used to determine if the sensor being read is increasing or
