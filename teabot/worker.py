@@ -61,7 +61,7 @@ def do_work():
     """
     current_weight = weight_sensor.read_and_store(wait=True)
     last_preparation_period = weight_sensor.last_period_matching(
-        condition=teapot_status.scale_is_empty, duration=timedelta(minutes=1))
+        condition=teapot_status.scale_is_empty, duration=timedelta(seconds=10))
 
     teapot_status.get_teapot_status(current_weight, last_preparation_period)
 
