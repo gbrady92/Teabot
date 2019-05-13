@@ -4,7 +4,6 @@ from datetime import timedelta
 NO_TEAPOT = "NO_TEAPOT"
 FULL_TEAPOT = "FULL_TEAPOT"
 GOOD_TEAPOT = "GOOD_TEAPOT"
-COLD_TEAPOT = "COLD_TEAPOT"
 EMPTY_TEAPOT = "EMPTY_TEAPOT"
 
 
@@ -17,8 +16,6 @@ class TeapotStatuses(object):
     FULL_TEAPOT = FULL_TEAPOT
     """A teapot that we don't want to notify about."""
     GOOD_TEAPOT = GOOD_TEAPOT
-    """A pot with tea in that is cold."""
-    COLD_TEAPOT = COLD_TEAPOT
     """A pot with no tea in.
     Note that if the scales are empty, we try to keep the state as it was, but
     it's entirely possible that it might slip into this state?
@@ -34,7 +31,6 @@ class Constants(object):
     def __init__(self):
         self.FULL_TEAPOT_WEIGHT = None
         self.EMPTY_TEAPOT_WEIGHT = None
-        self.COLD_TEAPOT_TEMPERATURE = None
         self.WEIGHT_OF_TEA_IN_CUP = None
         self.ZERO_WEIGHT = None
         self.BREW_DELAY_MINUTES = None
@@ -52,12 +48,6 @@ class Constants(object):
             # TODO Replace with actual database lookup
             self.EMPTY_TEAPOT_WEIGHT = 58
         return self.EMPTY_TEAPOT_WEIGHT
-
-    def get_cold_teapot_temperature(self):
-        if not self.COLD_TEAPOT_TEMPERATURE:
-            # TODO Replace with actual database lookup
-            self.COLD_TEAPOT_TEMPERATURE = 20
-        return self.COLD_TEAPOT_TEMPERATURE
 
     def get_weight_of_tea_in_cup(self):
         if not self.WEIGHT_OF_TEA_IN_CUP:

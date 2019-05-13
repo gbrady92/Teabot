@@ -1,6 +1,6 @@
 from fysom import Fysom
 from teabot.constants import (
-    NO_TEAPOT, FULL_TEAPOT, GOOD_TEAPOT, COLD_TEAPOT, EMPTY_TEAPOT,
+    NO_TEAPOT, FULL_TEAPOT, GOOD_TEAPOT, EMPTY_TEAPOT,
 )
 from teabot.server_communicator import ServerCommunicator
 
@@ -26,8 +26,7 @@ def handle_state_change_event(event):
         event.dst,
         event.timestamp,
         event.number_of_cups_remaining,
-        event.weight,
-        event.temperature
+        event.weight
     )
     last_number_of_cups = event.number_of_cups_remaining
     return True
@@ -46,8 +45,7 @@ def handle_state_reenter_event(event):
             event.dst,
             event.timestamp,
             event.number_of_cups_remaining,
-            event.weight,
-            event.temperature
+            event.weight
         )
     else:
         print "status hasn't changed"
@@ -81,11 +79,6 @@ def generate_teapot_state_machine():
                 'dst': EMPTY_TEAPOT
             },
             {
-                'name': 'temp_below_cold_weight_above_empty',
-                'src': NO_TEAPOT,
-                'dst': COLD_TEAPOT
-            },
-            {
                 'name': 'weight_above_empty_below_full',
                 'src': NO_TEAPOT,
                 'dst': GOOD_TEAPOT
@@ -101,11 +94,6 @@ def generate_teapot_state_machine():
                 'dst': GOOD_TEAPOT
             },
             {
-                'name': 'temp_below_cold_weight_above_empty',
-                'src': FULL_TEAPOT,
-                'dst': COLD_TEAPOT
-            },
-            {
                 'name': 'scales_empty',
                 'src': FULL_TEAPOT,
                 'dst': FULL_TEAPOT
@@ -138,32 +126,7 @@ def generate_teapot_state_machine():
             {
                 'name': 'temp_below_cold_weight_above_empty',
                 'src': GOOD_TEAPOT,
-                'dst': COLD_TEAPOT
-            },
-            {
-                'name': 'temp_rising_weight_above_full',
-                'src': COLD_TEAPOT,
                 'dst': FULL_TEAPOT
-            },
-            {
-                'name': 'weight_below_empty',
-                'src': COLD_TEAPOT,
-                'dst': EMPTY_TEAPOT
-            },
-            {
-                'name': 'scales_empty',
-                'src': COLD_TEAPOT,
-                'dst': COLD_TEAPOT
-            },
-            {
-                'name': 'temp_below_cold_weight_above_empty',
-                'src': COLD_TEAPOT,
-                'dst': COLD_TEAPOT
-            },
-            {
-                'name': 'weight_above_empty_below_full',
-                'src': COLD_TEAPOT,
-                'dst': COLD_TEAPOT
             },
             {
                 'name': 'temp_rising_weight_above_full',
@@ -191,7 +154,6 @@ def generate_teapot_state_machine():
             # FULL_TEAPOT should never be reentered but whatever
             'onreenterFULL_TEAPOT': handle_state_reenter_event,
             'onreenterGOOD_TEAPOT': handle_state_reenter_event,
-            'onreenterCOLD_TEAPOT': handle_state_reenter_event,
             'onreenterEMPTY_TEAPOT': handle_state_reenter_event,
         }
     })

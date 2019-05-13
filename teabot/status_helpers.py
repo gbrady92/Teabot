@@ -58,18 +58,6 @@ class TeapotStatus(object):
         return weight_of_tea_in_pot >= \
             self.configuration_constants.get_lower_bound_for_full_teapot()
 
-    def teapot_is_cold(self, teapot_temperature):
-        """Determines if the tea in the teapot is cold based on the current
-        temperature being below a predetermined threshold
-
-        Args:
-            teapot_temperature (int) - Current temperature of the teapot
-        Returns:
-            Boolean - True if the teapot is cold, False otherwise
-        """
-        return teapot_temperature <= \
-            self.configuration_constants.get_cold_teapot_temperature()
-
     def teapot_is_empty(self, teapot_weight):
         """Determines if there is any tea left in the teapot based on the
         weight of the tea in the pot being greater than nothing on the scale
@@ -149,26 +137,19 @@ class TeapotStatus(object):
             return True
         return False
 
-    def get_teapot_status(
-            self, teapot_weight, teapot_temperature,
-            teapot_temperature_is_rising_or_constant,
-            last_preparation_period):
+    def get_teapot_status(self, teapot_weight, last_preparation_period):
         """Determines the current status of the teapot using a finite state
         machine to transform the previous state of the teapot to the new state
         based on the readings from the sensors.
 
         Args:
             teapot_weight (int) - Current weight of the teapot
-            teapot_temperature (int) - Current temperature of the teapot
-            teapot_temperature_is_rising_or_constant (boolean) - If the
-                temperature is currently rising or constant
         Returns
             A namedtuple describing the state of the status (see
             get_teapot_descriptor)
         """
         state_machine = get_teapot_state_machine()
         teapot_full = self.teapot_is_full(teapot_weight)
-        teapot_cold = self.teapot_is_cold(teapot_temperature)
         teapot_empty = self.teapot_is_empty(teapot_weight)
         scale_empty = self.scale_is_empty(teapot_weight)
         number_of_cups = self.calculate_number_of_cups_remaining(teapot_weight)
@@ -176,11 +157,8 @@ class TeapotStatus(object):
 
         print "###############"
         print "teapot full", teapot_full
-        print "teapot_cold", teapot_cold
         print "teapot_empty", teapot_empty
         print "scale_empty", scale_empty
-        print "temp_rising_or_constant", \
-            teapot_temperature_is_rising_or_constant
 
         new_status = None
         print "state at start is", state_machine.current
@@ -192,13 +170,14 @@ class TeapotStatus(object):
         # scale empty first.
         if scale_empty:
             new_status = state_machine.current
-        elif teapot_temperature_is_rising_or_constant and teapot_full:
+        # TODO: previously this logic relied on
+        # teapot_temperature_is_rising_or_constant
+        elif teapot_full:
             if last_preparation_period > self.last_preparation_period:
                 self.last_preparation_period = last_preparation_period
                 state_machine.temp_rising_weight_above_full(
                     timestamp=timestamp,
                     weight=teapot_weight,
-                    temperature=teapot_temperature,
                     number_of_cups_remaining=number_of_cups)
             else:
                 # This makes the teapot state be GOOD_TEAPOT and we don't
@@ -206,35 +185,18 @@ class TeapotStatus(object):
                 state_machine.weight_above_empty_below_full(
                     timestamp=timestamp,
                     weight=teapot_weight,
-                    temperature=teapot_temperature,
                     number_of_cups_remaining=number_of_cups)
             new_status = state_machine.current
-        elif not teapot_empty and not teapot_full and not teapot_cold:
+        elif not teapot_empty and not teapot_full:
             state_machine.weight_above_empty_below_full(
                 timestamp=timestamp,
                 weight=teapot_weight,
-                temperature=teapot_temperature,
-                number_of_cups_remaining=number_of_cups)
-            new_status = state_machine.current
-        elif teapot_cold and not teapot_empty:
-            state_machine.temp_below_cold_weight_above_empty(
-                timestamp=timestamp,
-                weight=teapot_weight,
-                temperature=teapot_temperature,
-                number_of_cups_remaining=number_of_cups)
-            new_status = state_machine.current
-        elif teapot_cold and not teapot_empty:
-            state_machine.temp_below_cold(
-                timestamp=timestamp,
-                weight=teapot_weight,
-                temperature=teapot_temperature,
                 number_of_cups_remaining=number_of_cups)
             new_status = state_machine.current
         elif teapot_empty:
             state_machine.weight_below_empty(
                 timestamp=timestamp,
                 weight=teapot_weight,
-                temperature=teapot_temperature,
                 number_of_cups_remaining=number_of_cups)
             new_status = state_machine.current
         else:
