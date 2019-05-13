@@ -21,25 +21,25 @@ class TestTeapotState(TestCase):
 
     def _get_state_machine_at_full_teapot(self):
         state_machine = generate_teapot_state_machine()
-        state_machine.temp_rising_weight_above_full(**TRANSITION_KWARGS)
+        state_machine.weight_above_full(**TRANSITION_KWARGS)
         return state_machine
 
     def _get_state_machine_at_good_teapot(self):
         state_machine = generate_teapot_state_machine()
-        state_machine.temp_rising_weight_above_full(**TRANSITION_KWARGS)
+        state_machine.weight_above_full(**TRANSITION_KWARGS)
         state_machine.weight_above_empty_below_full(**TRANSITION_KWARGS)
         return state_machine
 
     def _get_state_machine_at_empty_teapot(self):
         state_machine = generate_teapot_state_machine()
-        state_machine.temp_rising_weight_above_full(**TRANSITION_KWARGS)
+        state_machine.weight_above_full(**TRANSITION_KWARGS)
         state_machine.weight_above_empty_below_full(**TRANSITION_KWARGS)
         state_machine.weight_below_empty(**TRANSITION_KWARGS)
         return state_machine
 
     def _get_state_machine_at_cold_teapot(self):
         state_machine = generate_teapot_state_machine()
-        state_machine.temp_rising_weight_above_full(**TRANSITION_KWARGS)
+        state_machine.weight_above_full(**TRANSITION_KWARGS)
         state_machine.weight_above_empty_below_full(**TRANSITION_KWARGS)
         state_machine.temp_below_cold_weight_above_empty(**TRANSITION_KWARGS)
         return state_machine
@@ -54,7 +54,7 @@ class TestTeapotState(TestCase):
         self.assertEqual(state_machine.current, TeapotStatuses.NO_TEAPOT)
 
         # Teapot placed on scales
-        state_machine.temp_rising_weight_above_full(**TRANSITION_KWARGS)
+        state_machine.weight_above_full(**TRANSITION_KWARGS)
         self.assertEqual(
             state_machine.current,
             TeapotStatuses.FULL_TEAPOT
@@ -125,7 +125,7 @@ class TestTeapotState(TestCase):
         self.assertEqual(state_machine.current, TeapotStatuses.FULL_TEAPOT)
 
         # Full sits there
-        state_machine.temp_rising_weight_above_full(**TRANSITION_KWARGS)
+        state_machine.weight_above_full(**TRANSITION_KWARGS)
         self.assertEqual(
             state_machine.current,
             TeapotStatuses.FULL_TEAPOT
@@ -166,7 +166,7 @@ class TestTeapotState(TestCase):
         self.assertEqual(state_machine.current, TeapotStatuses.GOOD_TEAPOT)
 
         # Someone ditched the good tea and made even more!
-        state_machine.temp_rising_weight_above_full(**TRANSITION_KWARGS)
+        state_machine.weight_above_full(**TRANSITION_KWARGS)
         self.assertEqual(
             state_machine.current,
             TeapotStatuses.FULL_TEAPOT
@@ -177,7 +177,7 @@ class TestTeapotState(TestCase):
         self.assertEqual(state_machine.current, TeapotStatuses.EMPTY_TEAPOT)
 
         # New pot made
-        state_machine.temp_rising_weight_above_full(**TRANSITION_KWARGS)
+        state_machine.weight_above_full(**TRANSITION_KWARGS)
         self.assertEqual(
             state_machine.current,
             TeapotStatuses.FULL_TEAPOT

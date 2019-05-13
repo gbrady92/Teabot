@@ -170,12 +170,10 @@ class TeapotStatus(object):
         # scale empty first.
         if scale_empty:
             new_status = state_machine.current
-        # TODO: previously this logic relied on
-        # teapot_temperature_is_rising_or_constant
         elif teapot_full:
             if last_preparation_period > self.last_preparation_period:
                 self.last_preparation_period = last_preparation_period
-                state_machine.temp_rising_weight_above_full(
+                state_machine.weight_above_full(
                     timestamp=timestamp,
                     weight=teapot_weight,
                     number_of_cups_remaining=number_of_cups)

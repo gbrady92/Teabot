@@ -206,7 +206,8 @@ class TestTeapotStatus(TestCase):
         mock_is_full.return_value = True
         mock_teapot_empty.return_value = False
         mock_scale_empty.return_value = False
-        result = teapot_status.get_teapot_status(10, now + timedelta(minutes=2))
+        result = teapot_status.get_teapot_status(
+            10, now + timedelta(minutes=2))
         self.assertEqual(result.teapot_state, TeapotStatuses.FULL_TEAPOT)
 
         # Cup drunk

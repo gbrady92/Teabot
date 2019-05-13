@@ -64,7 +64,7 @@ def generate_teapot_state_machine():
         'initial': NO_TEAPOT,
         'events': [
             {
-                'name': 'temp_rising_weight_above_full',
+                'name': 'weight_above_full',
                 'src': NO_TEAPOT,
                 'dst': FULL_TEAPOT
             },
@@ -99,7 +99,7 @@ def generate_teapot_state_machine():
                 'dst': FULL_TEAPOT
             },
             {
-                'name': 'temp_rising_weight_above_full',
+                'name': 'weight_above_full',
                 'src': FULL_TEAPOT,
                 'dst': FULL_TEAPOT
             },
@@ -114,7 +114,7 @@ def generate_teapot_state_machine():
                 'dst': GOOD_TEAPOT
             },
             {
-                'name': 'temp_rising_weight_above_full',
+                'name': 'weight_above_full',
                 'src': GOOD_TEAPOT,
                 'dst': FULL_TEAPOT
             },
@@ -129,7 +129,7 @@ def generate_teapot_state_machine():
                 'dst': FULL_TEAPOT
             },
             {
-                'name': 'temp_rising_weight_above_full',
+                'name': 'weight_above_full',
                 'src': EMPTY_TEAPOT,
                 'dst': FULL_TEAPOT
             },
