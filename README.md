@@ -26,4 +26,4 @@ To run Teabot after setting up the hardware you'll need to:
 
 1) Define the constants in contants.Constants
 2) Install the requirements in requirement.txt using pip
-3) Run ```python worker.py```
+3) Run ```./run```
