@@ -63,9 +63,7 @@ class Constants(object):
         return ENDPOINT_BASE_URL
 
     def get_lower_bound_for_full_teapot(self):
-        return EMPTY_TEAPOT_WEIGHT + (
-            WEIGHT_OF_TEA_IN_CUP * CUPS_IN_A_FULL_TEAPOT
-        )
+        return WEIGHT_OF_TEA_IN_CUP * CUPS_IN_A_FULL_TEAPOT
 
     def get_new_teapot_refresh_period(self):
         return NEW_TEAPOT_REFRESH_PERIOD

@@ -3,9 +3,8 @@
 Teabot is a bot that tells you the status of your teapot so you don't have to
 stand up from your desk to check.
 
-It combines a USB postage scale, an educational temperature sensor and a
-Rasberry pi to determine which of the TeapotStates in constants.py your teapot
-is in.
+It combines a USB postage scale and a Raspberry Pi to determine which of the 
+TeapotStates in constants.py your teapot is in.
 
 This implementation is tied to a webserver which acts as a relay between teabot
 and Slack so that we can:
