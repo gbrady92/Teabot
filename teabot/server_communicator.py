@@ -14,8 +14,8 @@ class ServerCommunicator(object):
         self.constants = Constants()
 
     def send_status_update(
-            self, status, timestamp, number_of_cups_remaining, weight,
-            temperature):
+            self, status, timestamp, number_of_cups_remaining, weight
+    ):
         """Sends the state of the teapot to the server and if this is a
         FULL_TEAPOT schedules an alert to be sent out (via the server)
         announcing that a new teapot is ready
@@ -38,7 +38,8 @@ class ServerCommunicator(object):
                 "timestamp": timestamp.isoformat(),
                 "num_of_cups": number_of_cups_remaining,
                 "weight": weight,
-                "temperature": temperature
+                # TODO: remove from server code
+                "temperature": None
             })
         )
 
